@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Planner - Build Better Habits</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Build Better Habits in 1 Minute/Day 🚀</h1>
+    <p>Start small, achieve big. Choose a category to get started.</p>
+    <a href="#categories" class="btn">Get Started</a>
+  </section>
+
+  <!-- Categories Section -->
+  <section id="categories" class="categories">
+    <h2>Choose a Category</h2>
+    <div class="category-grid">
+      <div class="category-card" data-category="education">
+        <i class="fas fa-book"></i>
+        <h3>Education</h3>
+        <p>Learn smarter, not harder.</p>
+      </div>
+      <div class="category-card" data-category="work">
+        <i class="fas fa-briefcase"></i>
+        <h3>Work</h3>
+        <p>Boost productivity effortlessly.</p>
+      </div>
+      <div class="category-card" data-category="health">
+        <i class="fas fa-heartbeat"></i>
+        <h3>Health</h3>
+        <p>Small steps for a healthier you.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Habit Suggestions Section -->
+  <section id="habits" class="habits">
+    <h2>Your Habit Suggestions</h2>
+    <div id="habit-list" class="habit-list">
+      <!-- Habit suggestions will be dynamically inserted here -->
+    </div>
+  </section>
+
+  <!-- Payment Section -->
+  <section class="payment">
+    <h2>Unlock Unlimited Habits for $10</h2>
+    <p>Get lifetime access to all features.</p>
+    <a href="YOUR_PAYMENT_LINK_HERE" class="btn">Upgrade Now</a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Made with ❤️ by Habit Planner</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

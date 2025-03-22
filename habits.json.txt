@@ -1,0 +1,17 @@
+{
+  "education": [
+    "Read 1 page of a book daily.",
+    "Practice 1 math problem daily.",
+    "Learn 1 new word daily."
+  ],
+  "work": [
+    "Reply to emails in 2 sentences.",
+    "Take a 5-minute break every hour.",
+    "Organize your desk at the end of the day."
+  ],
+  "health": [
+    "Drink a glass of water before coffee.",
+    "Do 5 minutes of stretching daily.",
+    "Take a 10-minute walk after lunch."
+  ]
+}
