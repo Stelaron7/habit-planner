@@ -2,218 +2,165 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NeuroFlux - Quantum Habit Interface</title>
+    <title>CYBERHABIT v2.0</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <style>
-        /* === Quantum Core === */
+        /* === CYBERPUNK CORE === */
         :root {
-            --quantum-purple: hsl(265, 100%, 60%);
-            --cyber-teal: hsl(170, 100%, 50%);
-            --neon-pink: hsl(330, 100%, 50%);
-            --dark-void: hsl(240, 33%, 5%);
-            --grid-size: 50px;
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ff;
+            --matrix-green: #0f0;
+            --dark-void: #000;
+            --hacker-font: 'Courier New', monospace;
         }
 
         body {
             margin: 0;
             background: var(--dark-void);
-            color: white;
-            font-family: 'Chakra Petch', sans-serif;
-            overflow-x: hidden;
-            min-height: 200vh;
+            color: var(--matrix-green);
+            font-family: var(--hacker-font);
+            overflow: hidden;
+            min-height: 100vh;
         }
 
-        /* === Neuro Grid Background === */
-        .quantum-grid {
-            position: fixed;
-            width: 200vw;
-            height: 200vh;
-            background:
-                linear-gradient(var(--dark-void) 2px, transparent 2px),
-                linear-gradient(90deg, var(--dark-void) 2px, transparent 2px),
-                linear-gradient(var(--dark-void) 1px, transparent 1px),
-                linear-gradient(90deg, var(--dark-void) 1px, transparent 1px);
-            background-size: 
-                var(--grid-size) var(--grid-size),
-                var(--grid-size) var(--grid-size),
-                10px 10px,
-                10px 10px;
-            background-position: -2px -2px;
-            filter: drop-shadow(0 0 10px var(--quantum-purple));
-            opacity: 0.3;
-            z-index: -1;
-            animation: gridFlow 40s linear infinite;
-        }
-
-        @keyframes gridFlow {
-            from { transform: translate(0,0); }
-            to { transform: translate(-50%,-50%); }
-        }
-
-        /* === Holographic Header === */
-        .neuro-header {
+        /* === GLITCH HEADER === */
+        .glitch-container {
             position: relative;
-            padding: 4rem;
+            text-align: center;
+            margin: 5rem 0;
+        }
+
+        .glitch-text {
+            font-size: 4rem;
+            text-transform: uppercase;
+            position: relative;
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(255,0,0,.75),
+                            -0.05em -0.025em 0 rgba(0,255,0,.75),
+                            0.025em 0.05em 0 rgba(0,0,255,.75); }
+            14% { text-shadow: 0.05em 0 0 rgba(255,0,0,.75),
+                            -0.05em -0.025em 0 rgba(0,255,0,.75),
+                            0.025em 0.05em 0 rgba(0,0,255,.75); }
+            15% { text-shadow: -0.05em -0.025em 0 rgba(255,0,0,.75),
+                            0.025em 0.025em 0 rgba(0,255,0,.75),
+                            -0.05em -0.05em 0 rgba(0,0,255,.75); }
+            49% { text-shadow: -0.05em -0.025em 0 rgba(255,0,0,.75),
+                            0.025em 0.025em 0 rgba(0,255,0,.75),
+                            -0.05em -0.05em 0 rgba(0,0,255,.75); }
+            50% { text-shadow: 0.025em 0.05em 0 rgba(255,0,0,.75),
+                            0.05em 0 0 rgba(0,255,0,.75),
+                            0 -0.05em 0 rgba(0,0,255,.75); }
+            99% { text-shadow: 0.025em 0.05em 0 rgba(255,0,0,.75),
+                            0.05em 0 0 rgba(0,255,0,.75),
+                            0 -0.05em 0 rgba(0,0,255,.75); }
+            100% { text-shadow: -0.025em 0 0 rgba(255,0,0,.75),
+                            -0.025em -0.025em 0 rgba(0,255,0,.75),
+                            -0.025em -0.05em 0 rgba(0,0,255,.75); }
+        }
+
+        /* === HOLOGRID === */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
             perspective: 1000px;
         }
 
-        .hologram-title {
-            font-size: 4rem;
-            text-align: center;
-            text-transform: uppercase;
-            background: linear-gradient(
-                45deg,
-                var(--quantum-purple),
-                var(--cyber-teal),
-                var(--neon-pink)
-            );
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: hologramFlicker 0.1s infinite;
+        .card {
+            background: rgba(0,255,0,0.05);
+            border: 2px solid var(--matrix-green);
+            padding: 2rem;
             position: relative;
-        }
-
-        .hologram-title::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            filter: blur(20px);
-            opacity: 0.8;
-        }
-
-        /* === Quantum Cards === */
-        .quantum-card {
-            position: relative;
-            width: 300px;
-            height: 400px;
-            margin: 2rem;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
             transform-style: preserve-3d;
+            transition: all 0.5s;
             cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .quantum-card:hover {
-            transform: 
-                translateZ(50px)
-                rotateX(5deg)
-                rotateY(-5deg)
-                scale(1.05);
-            box-shadow:
-                0 0 50px var(--quantum-purple),
-                0 0 30px var(--cyber-teal),
-                0 0 10px var(--neon-pink);
+        .card:hover {
+            transform: rotateX(10deg) rotateY(-10deg) translateZ(20px);
+            box-shadow: 0 0 50px var(--matrix-green);
         }
 
-        /* === Particle Matrix Effect === */
-        .matrix-rain {
+        /* === MATRIX RAIN === */
+        .matrix {
             position: fixed;
             top: 0;
             left: 0;
             pointer-events: none;
             z-index: -1;
-        }
-
-        /* === Neuro Interface === */
-        .neuro-interface {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(
-                45deg,
-                var(--quantum-purple),
-                var(--cyber-teal)
-            );
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            animation: neuroPulse 2s infinite;
-        }
-
-        @keyframes neuroPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            opacity: 0.3;
         }
     </style>
 </head>
 <body>
-    <div class="quantum-grid"></div>
+    <canvas class="matrix" id="matrix"></canvas>
     
-    <header class="neuro-header">
-        <h1 class="hologram-title" data-text="NeuroFlux">NeuroFlux</h1>
-    </header>
+    <div class="glitch-container">
+        <h1 class="glitch-text">HABIT MATRIX</h1>
+    </div>
 
-    <main>
-        <div class="quantum-card">
-            <div class="card-content">
-                <h2 class="card-title">Bio Hacking</h2>
-                <div class="neuro-progress">
-                    <div class="progress-bar"></div>
-                </div>
-            </div>
+    <div class="grid">
+        <div class="card">
+            <h2><i class="fas fa-brain"></i> NEURO HACKS</h2>
+            <ul>
+                <li>REM Sleep Optimization</li>
+                <li>Neuroplasticity Drills</li>
+                <li>Dopamine Fasting</li>
+            </ul>
         </div>
+        
         <!-- Add 6 more cards -->
-    </main>
-
-    <div class="matrix-rain" id="matrixCanvas"></div>
-    <div class="neuro-interface">
-        <i class="fas fa-brain"></i>
     </div>
 
     <script>
-        // Quantum Matrix Rain
-        const canvas = document.getElementById('matrixCanvas');
+        // Matrix Rain
+        const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
-        const fontSize = 14;
-        const columns = canvas.width/fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()';
+        const drops = Array(Math.floor(canvas.width/15)).fill(1);
 
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(0,0,0,0.05)';
-            ctx.fillRect(0,0,canvas.width,canvas.height);
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             ctx.fillStyle = '#0F0';
-            ctx.font = fontSize + 'px monospace';
+            ctx.font = '15px monospace';
 
             drops.forEach((drop, i) => {
-                const char = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(char, i*fontSize, drop*fontSize);
-                
-                if(drop*fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i*15, drop*15);
+                drops[i] = drop > canvas.height/15 || Math.random() > 0.95 ? 0 : drop+1;
             });
         }
 
-        // Quantum Interactions
-        document.querySelectorAll('.quantum-card').forEach(card => {
+        setInterval(draw, 50);
+
+        // Card Interactions
+        document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
+                card.style.transform = `
+                    rotateX(${(y - rect.height/2)/10}deg)
+                    rotateY(${-(x - rect.width/2)/10}deg)
+                    translateZ(20px)
+                `;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
             });
         });
-
-        // Init Matrix
-        setInterval(drawMatrix, 50);
     </script>
 </body>
 </html>
