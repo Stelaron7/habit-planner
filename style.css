@@ -1,114 +1,186 @@
-/* General Styles */
-body {
-  font-family: Arial, sans-serif;
+/* ===== Premium Design System ===== */
+:root {
+  --primary: #2A2F4F;
+  --secondary: #917FB3;
+  --accent: #E5BEEC;
+  --text: #2B2B2B;
+  --gradient: linear-gradient(135deg, #2A2F4F 0%, #917FB3 100%);
+  --shadow: 0 10px 30px rgba(0,0,0,0.05);
+  --radius: 20px;
+}
+
+/* ===== Base Styles ===== */
+* {
   margin: 0;
   padding: 0;
-  background: #f0f4ff;
-  color: #333;
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Hero Section */
-.hero {
-  text-align: center;
-  padding: 100px 20px;
-  background: linear-gradient(45deg, #6366f1, #8b5cf6);
+body {
+  background: #f8f9fa;
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+/* ===== Premium Navigation ===== */
+.nav-container {
+  background: var(--gradient);
+  padding: 1rem 5%;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow);
+}
+
+.nav-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logo {
   color: white;
-}
-
-.hero h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-}
-
-.hero p {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-}
-
-.hero .btn {
-  background: #10b981;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-/* Categories Section */
-.categories {
-  padding: 50px 20px;
-  text-align: center;
-}
-
-.categories h2 {
   font-size: 2rem;
-  margin-bottom: 20px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: -0.5px;
 }
 
-.category-grid {
+/* ===== Main Content Grid ===== */
+.sections-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  padding: 6rem 5% 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.category-card {
+/* ===== Section Cards ===== */
+.section-card {
   background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  transition: transform 0.3s;
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.section-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-icon {
+  width: 50px;
+  height: 50px;
+  background: var(--gradient);
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 1.2rem;
+}
+
+/* ===== Subsections ===== */
+.subsection {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+}
+
+.subsection h3 {
+  color: var(--primary);
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+}
+
+.quick-plan {
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.quick-plan:hover {
+  transform: translateX(5px);
+}
+
+/* ===== Premium Features ===== */
+.premium {
+  position: relative;
   cursor: pointer;
 }
 
-.category-card:hover {
-  transform: translateY(-5px);
+.premium::after {
+  content: "PRO";
+  background: var(--secondary);
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 0.5rem;
 }
 
-.category-card i {
-  font-size: 2rem;
-  margin-bottom: 10px;
-  color: #6366f1;
+.premium-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.95);
+  display: none;
+  place-items: center;
+  border-radius: var(--radius);
 }
 
-/* Habit Suggestions Section */
-.habits {
-  padding: 50px 20px;
-  text-align: center;
+/* ===== Pricing Modal ===== */
+.premium-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  place-items: center;
+  z-index: 2000;
 }
 
-.habit-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.habit-card {
+.modal-content {
   background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  padding: 3rem;
+  border-radius: var(--radius);
+  max-width: 600px;
+  width: 90%;
+  position: relative;
 }
 
-/* Payment Section */
-.payment {
-  text-align: center;
-  padding: 50px 20px;
-  background: #f0f4ff;
-}
-
-.payment .btn {
-  background: #10b981;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-/* Footer */
-footer {
-  text-align: center;
-  padding: 20px;
-  background: #333;
-  color: white;
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+  .sections-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    padding: 2rem;
+  }
 }
