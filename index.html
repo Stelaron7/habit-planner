@@ -1,166 +1,50 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CYBERHABIT v2.0</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-    <style>
-        /* === CYBERPUNK CORE === */
-        :root {
-            --neon-blue: #00f3ff;
-            --neon-pink: #ff00ff;
-            --matrix-green: #0f0;
-            --dark-void: #000;
-            --hacker-font: 'Courier New', monospace;
-        }
-
-        body {
-            margin: 0;
-            background: var(--dark-void);
-            color: var(--matrix-green);
-            font-family: var(--hacker-font);
-            overflow: hidden;
-            min-height: 100vh;
-        }
-
-        /* === GLITCH HEADER === */
-        .glitch-container {
-            position: relative;
-            text-align: center;
-            margin: 5rem 0;
-        }
-
-        .glitch-text {
-            font-size: 4rem;
-            text-transform: uppercase;
-            position: relative;
-            animation: glitch 3s infinite;
-        }
-
-        @keyframes glitch {
-            0% { text-shadow: 0.05em 0 0 rgba(255,0,0,.75),
-                            -0.05em -0.025em 0 rgba(0,255,0,.75),
-                            0.025em 0.05em 0 rgba(0,0,255,.75); }
-            14% { text-shadow: 0.05em 0 0 rgba(255,0,0,.75),
-                            -0.05em -0.025em 0 rgba(0,255,0,.75),
-                            0.025em 0.05em 0 rgba(0,0,255,.75); }
-            15% { text-shadow: -0.05em -0.025em 0 rgba(255,0,0,.75),
-                            0.025em 0.025em 0 rgba(0,255,0,.75),
-                            -0.05em -0.05em 0 rgba(0,0,255,.75); }
-            49% { text-shadow: -0.05em -0.025em 0 rgba(255,0,0,.75),
-                            0.025em 0.025em 0 rgba(0,255,0,.75),
-                            -0.05em -0.05em 0 rgba(0,0,255,.75); }
-            50% { text-shadow: 0.025em 0.05em 0 rgba(255,0,0,.75),
-                            0.05em 0 0 rgba(0,255,0,.75),
-                            0 -0.05em 0 rgba(0,0,255,.75); }
-            99% { text-shadow: 0.025em 0.05em 0 rgba(255,0,0,.75),
-                            0.05em 0 0 rgba(0,255,0,.75),
-                            0 -0.05em 0 rgba(0,0,255,.75); }
-            100% { text-shadow: -0.025em 0 0 rgba(255,0,0,.75),
-                            -0.025em -0.025em 0 rgba(0,255,0,.75),
-                            -0.025em -0.05em 0 rgba(0,0,255,.75); }
-        }
-
-        /* === HOLOGRID === */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
-            perspective: 1000px;
-        }
-
-        .card {
-            background: rgba(0,255,0,0.05);
-            border: 2px solid var(--matrix-green);
-            padding: 2rem;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: all 0.5s;
-            cursor: pointer;
-        }
-
-        .card:hover {
-            transform: rotateX(10deg) rotateY(-10deg) translateZ(20px);
-            box-shadow: 0 0 50px var(--matrix-green);
-        }
-
-        /* === MATRIX RAIN === */
-        .matrix {
-            position: fixed;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.3;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stelaron - AI-Powered Habit Engineering</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <canvas class="matrix" id="matrix"></canvas>
-    
-    <div class="glitch-container">
-        <h1 class="glitch-text">HABIT MATRIX</h1>
-    </div>
-
-    <div class="grid">
-        <div class="card">
-            <h2><i class="fas fa-brain"></i> NEURO HACKS</h2>
-            <ul>
-                <li>REM Sleep Optimization</li>
-                <li>Neuroplasticity Drills</li>
-                <li>Dopamine Fasting</li>
-            </ul>
+    <nav class="main-nav">
+        <div class="nav-brand">
+            <img src="logo.svg" alt="Stelaron" class="logo">
+            <span class="ai-badge">AI v2.3.1</span>
         </div>
-        
-        <!-- Add 6 more cards -->
+        <div class="nav-actions">
+            <button class="btn-premium">Unlock NeuroFlow</button>
+        </div>
+    </nav>
+
+    <main class="habit-matrix">
+        <!-- Sections loaded dynamically -->
+    </main>
+
+    <div class="premium-modal hidden">
+        <div class="modal-content">
+            <h3>Unlock Quantum Habits</h3>
+            <div class="pricing-cards">
+                <div class="price-card">
+                    <h4>Neuro Pro</h4>
+                    <div class="price">$97<span>/month</span></div>
+                    <ul class="features">
+                        <li>Full AI Habit Architect</li>
+                        <li>Biometric Integration</li>
+                        <li>DNA-Based Plans</li>
+                    </ul>
+                    <button class="btn-subscribe">Activate Now</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Matrix Rain
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+    <div class="ai-fab">
+        <i class="fas fa-robot"></i>
+    </div>
 
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()';
-        const drops = Array(Math.floor(canvas.width/15)).fill(1);
-
-        function draw() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.fillStyle = '#0F0';
-            ctx.font = '15px monospace';
-
-            drops.forEach((drop, i) => {
-                const text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i*15, drop*15);
-                drops[i] = drop > canvas.height/15 || Math.random() > 0.95 ? 0 : drop+1;
-            });
-        }
-
-        setInterval(draw, 50);
-
-        // Card Interactions
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                card.style.transform = `
-                    rotateX(${(y - rect.height/2)/10}deg)
-                    rotateY(${-(x - rect.width/2)/10}deg)
-                    translateZ(20px)
-                `;
-            });
-
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = '';
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
