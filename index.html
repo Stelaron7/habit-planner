@@ -1,63 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Habit Planner - Build Better Habits</title>
-  <link rel="stylesheet" href="styles.css">
-  <!-- Font Awesome for Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteLife - Premium Habit Architect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary: #2A2F4F;
+            --secondary: #917FB3;
+            --accent: #E5BEEC;
+            --text: #333;
+            --gradient: linear-gradient(135deg, #2A2F4F 0%, #917FB3 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Premium Navigation */
+        .nav-container {
+            background: var(--gradient);
+            padding: 1rem 5%;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        /* Main Sections Grid */
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 6rem 5% 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            color: white;
+        }
+
+        /* Subscription Overlay */
+        .premium-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            place-items: center;
+            border-radius: 20px;
+        }
+
+        /* Pricing Section */
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 4rem 5%;
+        }
+    </style>
 </head>
 <body>
-  <!-- Hero Section -->
-  <section class="hero">
-    <h1>Build Better Habits in 1 Minute/Day 🚀</h1>
-    <p>Start small, achieve big. Choose a category to get started.</p>
-    <a href="#categories" class="btn">Get Started</a>
-  </section>
+    <nav class="nav-container">
+        <div class="nav-main">
+            <a href="#" class="logo">EliteLife</a>
+            <div class="nav-links">
+                <a href="#premium" class="premium-btn">Premium</a>
+            </div>
+        </div>
+    </nav>
 
-  <!-- Categories Section -->
-  <section id="categories" class="categories">
-    <h2>Choose a Category</h2>
-    <div class="category-grid">
-      <div class="category-card" data-category="education">
-        <i class="fas fa-book"></i>
-        <h3>Education</h3>
-        <p>Learn smarter, not harder.</p>
-      </div>
-      <div class="category-card" data-category="work">
-        <i class="fas fa-briefcase"></i>
-        <h3>Work</h3>
-        <p>Boost productivity effortlessly.</p>
-      </div>
-      <div class="category-card" data-category="health">
-        <i class="fas fa-heartbeat"></i>
-        <h3>Health</h3>
-        <p>Small steps for a healthier you.</p>
-      </div>
+    <main class="sections-grid">
+        <!-- Health Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h2>Health & Wellness</h2>
+            </div>
+            <div class="subsection">
+                <h3>Physical Health</h3>
+                <div class="quick-plan">Morning mobility routine (5 min)</div>
+                <div class="quick-plan premium">Evening recovery protocol <i class="fas fa-lock"></i></div>
+            </div>
+            <!-- Add 9 more subsections -->
+        </div>
+
+        <!-- Education Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h2>Education</h2>
+            </div>
+            <div class="subsection">
+                <h3>Skill Development</h3>
+                <div class="quick-plan">Daily micro-learning session</div>
+                <div class="quick-plan premium">Expert mentorship access <i class="fas fa-lock"></i></div>
+            </div>
+        </div>
+
+        <!-- Add 5 more main sections -->
+    </main>
+
+    <!-- Premium Modal -->
+    <div class="premium-modal">
+        <div class="modal-content">
+            <h2>Unlock Elite Access</h2>
+            <div class="pricing-cards">
+                <div class="price-card">
+                    <h3>Founder</h3>
+                    <div class="price">$299<span>/month</span></div>
+                    <ul>
+                        <li>All premium features</li>
+                        <li>Priority support</li>
+                        <li>Personal coach</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-  </section>
 
-  <!-- Habit Suggestions Section -->
-  <section id="habits" class="habits">
-    <h2>Your Habit Suggestions</h2>
-    <div id="habit-list" class="habit-list">
-      <!-- Habit suggestions will be dynamically inserted here -->
-    </div>
-  </section>
+    <script>
+        // Premium Feature Handling
+        const premiumItems = document.querySelectorAll('.premium');
+        const premiumModal = document.querySelector('.premium-modal');
 
-  <!-- Payment Section -->
-  <section class="payment">
-    <h2>Unlock Unlimited Habits for $10</h2>
-    <p>Get lifetime access to all features.</p>
-    <a href="YOUR_PAYMENT_LINK_HERE" class="btn">Upgrade Now</a>
-  </section>
+        premiumItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                if(!item.classList.contains('unlocked')) {
+                    premiumModal.style.display = 'flex';
+                }
+            });
+        });
 
-  <!-- Footer -->
-  <footer>
-    <p>Made with ❤️ by Habit Planner</p>
-  </footer>
-
-  <script src="script.js"></script>
+        // Modal Close
+        window.addEventListener('click', (e) => {
+            if(e.target === premiumModal) {
+                premiumModal.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
