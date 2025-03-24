@@ -1,50 +1,293 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stelaron - AI-Powered Habit Engineering</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <title>Stelaron - AI Habit Architect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background: #f8f9fa;
+            color: #2b2b2b;
+            line-height: 1.6;
+        }
+        
+        /* ===== NAVIGATION ===== */
+        .main-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2A2F4F;
+            text-decoration: none;
+        }
+        
+        .btn-premium {
+            background: linear-gradient(135deg, #2A2F4F 0%, #917FB3 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .btn-premium:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* ===== MAIN GRID ===== */
+        .habit-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 3rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #2A2F4F 0%, #917FB3 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        /* ===== SUBSECTIONS ===== */
+        .subsection {
+            margin-bottom: 1.5rem;
+        }
+        
+        .subsection h3 {
+            color: #2A2F4F;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+        
+        .plan {
+            background: #f8f9fa;
+            padding: 0.8rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        
+        .plan:hover {
+            transform: translateX(5px);
+        }
+        
+        .plan.premium {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .plan.premium::after {
+            content: "PRO";
+            background: #FFD700;
+            color: #2A2F4F;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+        }
+        
+        /* ===== AI FAB ===== */
+        .ai-fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2A2F4F 0%, #917FB3 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 20px rgba(42,47,79,0.3);
+            cursor: pointer;
+            z-index: 100;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* ===== MODAL ===== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+    </style>
 </head>
 <body>
     <nav class="main-nav">
-        <div class="nav-brand">
-            <img src="logo.svg" alt="Stelaron" class="logo">
-            <span class="ai-badge">AI v2.3.1</span>
-        </div>
-        <div class="nav-actions">
-            <button class="btn-premium">Unlock NeuroFlow</button>
-        </div>
+        <a href="#" class="logo">STELARON</a>
+        <button class="btn-premium">Unlock Premium</button>
     </nav>
 
     <main class="habit-matrix">
-        <!-- Sections loaded dynamically -->
+        <!-- Health Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h2>Health Optimization</h2>
+            </div>
+            
+            <div class="subsection">
+                <h3>Physical Performance</h3>
+                <div class="plan">Morning mobility routine (5 min)</div>
+                <div class="plan premium">Evening recovery protocol <i class="fas fa-lock"></i></div>
+            </div>
+            
+            <div class="subsection">
+                <h3>Mental Fitness</h3>
+                <div class="plan">Daily mindfulness exercise</div>
+                <div class="plan premium">Neuroplasticity drills <i class="fas fa-lock"></i></div>
+            </div>
+            
+            <!-- Add 8 more subsections -->
+        </div>
+
+        <!-- Education Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h2>Education</h2>
+            </div>
+            
+            <div class="subsection">
+                <h3>Skill Development</h3>
+                <div class="plan">Daily micro-learning session</div>
+                <div class="plan premium">Expert mentorship access <i class="fas fa-lock"></i></div>
+            </div>
+            
+            <!-- Add 9 more subsections -->
+        </div>
+
+        <!-- Add 5 more main sections -->
     </main>
 
-    <div class="premium-modal hidden">
+    <!-- Premium Modal -->
+    <div class="modal" id="premiumModal">
         <div class="modal-content">
-            <h3>Unlock Quantum Habits</h3>
-            <div class="pricing-cards">
-                <div class="price-card">
-                    <h4>Neuro Pro</h4>
-                    <div class="price">$97<span>/month</span></div>
-                    <ul class="features">
-                        <li>Full AI Habit Architect</li>
-                        <li>Biometric Integration</li>
-                        <li>DNA-Based Plans</li>
-                    </ul>
-                    <button class="btn-subscribe">Activate Now</button>
-                </div>
-            </div>
+            <h3>Unlock Stelaron Premium</h3>
+            <p>Get full access to all habit architectures and AI features</p>
+            <button class="btn-premium">Upgrade Now ($10/month)</button>
         </div>
     </div>
 
+    <!-- AI Assistant -->
     <div class="ai-fab">
         <i class="fas fa-robot"></i>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // DOM Elements
+        const premiumButtons = document.querySelectorAll('.btn-premium');
+        const premiumModal = document.getElementById('premiumModal');
+        const aiFab = document.querySelector('.ai-fab');
+
+        // Open Premium Modal
+        premiumButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                premiumModal.style.display = 'flex';
+            });
+        });
+
+        // Close Modal When Clicking Outside
+        premiumModal.addEventListener('click', (e) => {
+            if (e.target === premiumModal) {
+                premiumModal.style.display = 'none';
+            }
+        });
+
+        // AI Assistant Functionality
+        aiFab.addEventListener('click', () => {
+            const goal = prompt("What's your primary life goal?");
+            if (goal) {
+                alert(`🚀 Generated AI-Powered Habit Plan for "${goal}":\n\n1. Morning Quantum Routine\n2. Cognitive Enhancement Drills\n3. Metabolic Optimization Protocol`);
+            }
+        });
+
+        // Load more content dynamically
+        window.addEventListener('DOMContentLoaded', () => {
+            // Simulate loading data
+            setTimeout(() => {
+                console.log('All habit architectures loaded');
+            }, 500);
+        });
+    </script>
 </body>
 </html>
