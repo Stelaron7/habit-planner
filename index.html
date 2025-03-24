@@ -3,290 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stelaron - AI Habit Architect</title>
+    <title>Stelaron - Transform Your Life</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== RESET & BASE ===== */
+        /* ===== BASE STYLES ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
         }
-        
+
         body {
-            background: #f8f9fa;
-            color: #2b2b2b;
+            color: white;
             line-height: 1.6;
+            overflow-x: hidden;
         }
-        
-        /* ===== NAVIGATION ===== */
-        .main-nav {
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            height: 100vh;
+            background: 
+                linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)),
+                url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3840&q=80') center/cover;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 1rem 5%;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            padding: 0 2rem;
         }
-        
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #2A2F4F;
-            text-decoration: none;
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: fadeIn 1.5s ease;
         }
-        
-        .btn-premium {
-            background: linear-gradient(135deg, #2A2F4F 0%, #917FB3 100%);
+
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin-bottom: 3rem;
+            animation: fadeIn 2s ease;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
             border-radius: 50px;
-            font-weight: 600;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: pulse 2s infinite;
         }
-        
-        .btn-premium:hover {
-            transform: translateY(-2px);
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
         }
-        
-        /* ===== MAIN GRID ===== */
-        .habit-matrix {
+
+        /* ===== SECTIONS ===== */
+        .section {
+            padding: 6rem 10%;
+            color: #333;
+        }
+
+        .section-dark {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* ===== HABIT CARDS ===== */
+        .habit-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            padding: 3rem 5%;
-            max-width: 1400px;
-            margin: 0 auto;
         }
-        
-        .section-card {
+
+        .habit-card {
             background: white;
             border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .section-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #2A2F4F 0%, #917FB3 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-        
-        /* ===== SUBSECTIONS ===== */
-        .subsection {
-            margin-bottom: 1.5rem;
-        }
-        
-        .subsection h3 {
-            color: #2A2F4F;
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-        }
-        
-        .plan {
-            background: #f8f9fa;
-            padding: 0.8rem 1rem;
-            margin: 0.5rem 0;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: transform 0.2s;
-        }
-        
-        .plan:hover {
-            transform: translateX(5px);
-        }
-        
-        .plan.premium {
-            position: relative;
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
         }
-        
-        .plan.premium::after {
-            content: "PRO";
-            background: #FFD700;
+
+        .habit-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-content h3 {
             color: #2A2F4F;
-            font-size: 0.7rem;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 0.5rem;
+            margin-bottom: 1rem;
         }
-        
-        /* ===== AI FAB ===== */
-        .ai-fab {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #2A2F4F 0%, #917FB3 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            box-shadow: 0 5px 20px rgba(42,47,79,0.3);
-            cursor: pointer;
-            z-index: 100;
-            animation: pulse 2s infinite;
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
+
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-        
-        /* ===== MODAL ===== */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 16px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="main-nav">
-        <a href="#" class="logo">STELARON</a>
-        <button class="btn-premium">Unlock Premium</button>
-    </nav>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Engineer Your Perfect Life</h1>
+        <p>Stelaron's AI-powered habit architecture transforms your daily routines into quantum leaps toward success</p>
+        <button class="cta-button">Begin Transformation</button>
+    </section>
 
-    <main class="habit-matrix">
-        <!-- Health Section -->
-        <div class="section-card">
-            <div class="section-header">
-                <div class="section-icon">
-                    <i class="fas fa-heartbeat"></i>
+    <!-- Health Section -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Biohacking Mastery</h2>
+            <p>Optimize your biology for peak performance</p>
+        </div>
+        <div class="habit-grid">
+            <div class="habit-card">
+                <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80')"></div>
+                <div class="card-content">
+                    <h3>Circadian Rhythm</h3>
+                    <p>Align your biology with natural cycles</p>
+                    <button class="btn-premium">Unlock Protocol</button>
                 </div>
-                <h2>Health Optimization</h2>
             </div>
-            
-            <div class="subsection">
-                <h3>Physical Performance</h3>
-                <div class="plan">Morning mobility routine (5 min)</div>
-                <div class="plan premium">Evening recovery protocol <i class="fas fa-lock"></i></div>
-            </div>
-            
-            <div class="subsection">
-                <h3>Mental Fitness</h3>
-                <div class="plan">Daily mindfulness exercise</div>
-                <div class="plan premium">Neuroplasticity drills <i class="fas fa-lock"></i></div>
-            </div>
-            
-            <!-- Add 8 more subsections -->
+            <!-- Add 3 more cards -->
         </div>
+    </section>
 
-        <!-- Education Section -->
-        <div class="section-card">
-            <div class="section-header">
-                <div class="section-icon">
-                    <i class="fas fa-graduation-cap"></i>
+    <!-- Education Section -->
+    <section class="section section-dark">
+        <div class="section-header">
+            <h2>Neuro Acceleration</h2>
+            <p>Upgrade your cognitive performance</p>
+        </div>
+        <div class="habit-grid">
+            <div class="habit-card">
+                <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80')"></div>
+                <div class="card-content">
+                    <h3>Memory Palace</h3>
+                    <p>Ancient technique, modern implementation</p>
+                    <button class="btn-premium">Unlock Protocol</button>
                 </div>
-                <h2>Education</h2>
             </div>
-            
-            <div class="subsection">
-                <h3>Skill Development</h3>
-                <div class="plan">Daily micro-learning session</div>
-                <div class="plan premium">Expert mentorship access <i class="fas fa-lock"></i></div>
+            <!-- Add 3 more cards -->
+        </div>
+    </section>
+
+    <!-- Productivity Section -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Flow State Engineering</h2>
+            <p>Enter peak performance on demand</p>
+        </div>
+        <div class="habit-grid">
+            <div class="habit-card">
+                <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80')"></div>
+                <div class="card-content">
+                    <h3>Deep Work</h3>
+                    <p>4-hour productivity in 2 hours</p>
+                    <button class="btn-premium">Unlock Protocol</button>
+                </div>
             </div>
-            
-            <!-- Add 9 more subsections -->
+            <!-- Add 3 more cards -->
         </div>
+    </section>
 
-        <!-- Add 5 more main sections -->
-    </main>
-
-    <!-- Premium Modal -->
-    <div class="modal" id="premiumModal">
-        <div class="modal-content">
-            <h3>Unlock Stelaron Premium</h3>
-            <p>Get full access to all habit architectures and AI features</p>
-            <button class="btn-premium">Upgrade Now ($10/month)</button>
+    <!-- Relationships Section -->
+    <section class="section section-dark">
+        <div class="section-header">
+            <h2>Social Architecture</h2>
+            <p>Design your ideal social ecosystem</p>
         </div>
-    </div>
+        <div class="habit-grid">
+            <div class="habit-card">
+                <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1738&q=80')"></div>
+                <div class="card-content">
+                    <h3>Charisma Patterns</h3>
+                    <p>Become magnetically attractive</p>
+                    <button class="btn-premium">Unlock Protocol</button>
+                </div>
+            </div>
+            <!-- Add 3 more cards -->
+        </div>
+    </section>
 
-    <!-- AI Assistant -->
-    <div class="ai-fab">
-        <i class="fas fa-robot"></i>
-    </div>
+    <!-- Finance Section -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Wealth Algorithms</h2>
+            <p>Program your financial freedom</p>
+        </div>
+        <div class="habit-grid">
+            <div class="habit-card">
+                <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1511&q=80')"></div>
+                <div class="card-content">
+                    <h3>Automated Wealth</h3>
+                    <p>Set-and-forget income systems</p>
+                    <button class="btn-premium">Unlock Protocol</button>
+                </div>
+            </div>
+            <!-- Add 3 more cards -->
+        </div>
+    </section>
 
     <script>
-        // DOM Elements
-        const premiumButtons = document.querySelectorAll('.btn-premium');
-        const premiumModal = document.getElementById('premiumModal');
-        const aiFab = document.querySelector('.ai-fab');
+        // Animate sections on scroll
+        const sections = document.querySelectorAll('.section');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
 
-        // Open Premium Modal
-        premiumButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                premiumModal.style.display = 'flex';
+        sections.forEach(section => {
+            section.style.opacity = 0;
+            section.style.transform = 'translateY(50px)';
+            section.style.transition = 'all 0.8s ease';
+            observer.observe(section);
+        });
+
+        // Button functionality
+        document.querySelectorAll('.btn-premium').forEach(btn => {
+            btn.addEventListener('click', () => {
+                alert("🚀 Premium feature unlocked!\n\nThis would redirect to payment in production");
             });
         });
 
-        // Close Modal When Clicking Outside
-        premiumModal.addEventListener('click', (e) => {
-            if (e.target === premiumModal) {
-                premiumModal.style.display = 'none';
-            }
-        });
-
-        // AI Assistant Functionality
-        aiFab.addEventListener('click', () => {
-            const goal = prompt("What's your primary life goal?");
-            if (goal) {
-                alert(`🚀 Generated AI-Powered Habit Plan for "${goal}":\n\n1. Morning Quantum Routine\n2. Cognitive Enhancement Drills\n3. Metabolic Optimization Protocol`);
-            }
-        });
-
-        // Load more content dynamically
-        window.addEventListener('DOMContentLoaded', () => {
-            // Simulate loading data
-            setTimeout(() => {
-                console.log('All habit architectures loaded');
-            }, 500);
+        // CTA button
+        document.querySelector('.cta-button').addEventListener('click', () => {
+            window.scrollTo({
+                top: document.querySelector('.section').offsetTop,
+                behavior: 'smooth'
+            });
         });
     </script>
 </body>
