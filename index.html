@@ -1,1 +1,131 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sunrise Habits</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>:root{--sunrise-orange:#FF7E5F;--sky-blue:#6EC3F7;--sunshine-yellow:#FFD166;--fresh-green:#06D6A0;--light-sand:#FFF5E6;--white:#FFFFFF}*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}body{background:var(--light-sand);color:#333;line-height:1.6}nav{background:var(--white);padding:1rem 5%;box-shadow:0 2px 15px rgba(0,0,0,0.05);display:flex;justify-content:space-between;align-items:center}.logo{font-size:1.8rem;font-weight:700;color:var(--sunrise-orange);text-decoration:none}.nav-links a{margin-left:1.5rem;color:#555;text-decoration:none;font-weight:500;transition:color 0.3s}.nav-links a:hover{color:var(--sunrise-orange)}.hero{text-align:center;padding:5rem 5% 7rem;background:linear-gradient(rgba(255,255,255,0.8),rgba(255,255,255,0.8)),url('https://images.unsplash.com/photo-1490730141103-6cac27aaab94?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80') center/cover}.hero h1{font-size:3.5rem;margin-bottom:1rem;color:var(--sunrise-orange)}.hero p{font-size:1.3rem;max-width:700px;margin:0 auto 2.5rem;color:#555}.cta-button{background:var(--sunrise-orange);color:white;border:none;padding:1rem 2.5rem;font-size:1.1rem;border-radius:50px;cursor:pointer;transition:transform 0.3s,box-shadow 0.3s}.cta-button:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(255,126,95,0.3)}.habit-tracker{max-width:1000px;margin:-3rem auto 5rem;padding:2rem;background:var(--white);border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.05)}.tracker-header{text-align:center;margin-bottom:2rem}.tracker-header h2{font-size:2.2rem;color:var(--sunrise-orange);margin-bottom:0.5rem}.tracker-header p{color:#777}.habit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}.habit-card{background:var(--white);border-radius:15px;padding:1.5rem;box-shadow:0 5px 15px rgba(0,0,0,0.05);border:2px solid rgba(255,126,95,0.1);transition:transform 0.3s}.habit-card:hover{transform:translateY(-5px);border-color:rgba(255,126,95,0.3)}.habit-card h3{color:var(--sunrise-orange);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}.habit-card p{color:#666;margin-bottom:1.5rem;font-size:0.95rem}.streak-counter{display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;color:var(--fresh-green);font-weight:600}.streak-counter i{color:var(--fresh-green)}.complete-button{width:100%;padding:0.8rem;background:var(--fresh-green);color:white;border:none;border-radius:8px;cursor:pointer;transition:background 0.3s}.complete-button:hover{background:#05C293}@media(max-width:768px){.hero h1{font-size:2.5rem}.hero p{font-size:1.1rem}.habit-grid{grid-template-columns:1fr}}</style></head><body><nav><a href="#" class="logo">Sunrise Habits</a><div class="nav-links"><a href="#tracker">Habit Tracker</a><a href="#testimonials">Success Stories</a><a href="#" class="cta-button">Get Started</a></div></nav><section class="hero"><h1>Build Your Perfect Morning</h1><p>Start your day with energy and purpose.</p><button class="cta-button">Start Your 7-Day Challenge</button></section><section class="habit-tracker" id="tracker"><div class="tracker-header"><h2>Your Morning Routine</h2><p>Track your progress and build streaks</p></div><div class="habit-grid"><div class="habit-card"><h3><i class="fas fa-glass-water"></i> Hydrate First</h3><p>Drink water within 10 minutes of waking</p><div class="streak-counter"><i class="fas fa-fire"></i> 5-day streak</div><button class="complete-button">Mark as Done</button></div><div class="habit-card"><h3><i class="fas fa-sun"></i> Morning Sunlight</h3><p>Get sunlight before checking phone</p><div class="streak-counter"><i class="fas fa-fire"></i> 3-day streak</div><button class="complete-button">Mark as Done</button></div><div class="habit-card"><h3><i class="fas fa-book-open"></i> Read 10 Pages</h3><p>Read something inspiring</p><div class="streak-counter"><i class="fas fa-fire"></i> 7-day streak</div><button class="complete-button">Mark as Done</button></div></div></section><script>const habitButtons=document.querySelectorAll('.complete-button');habitButtons.forEach(button=>{button.addEventListener('click',function(){const card=this.closest('.habit-card');const streakCounter=card.querySelector('.streak-counter');const currentStreak=parseInt(streakCounter.textContent);streakCounter.innerHTML=`<i class="fas fa-fire"></i> ${currentStreak+1}-day streak`;this.textContent='Done!';this.style.background='var(--sunshine-yellow)';setTimeout(()=>{this.textContent='Mark as Done';this.style.background='var(--fresh-green)'},2000)})});document.querySelectorAll('a[href^="#"]').forEach(anchor=>{anchor.addEventListener('click',function(e){e.preventDefault();document.querySelector(this.getAttribute('href')).scrollIntoView({behavior:'smooth'})})});</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitForge Pro - Ultimate Habit Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent: #fd79a8;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --success: #00b894;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .habit-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .streak-counter {
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .fire-animation {
+            color: #ff5722;
+            display: inline-block;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Add more styles as needed */
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-fire fire-animation"></i> HabitForge Pro</h1>
+            <p>Build morning habits with gamified tracking</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="habit-card">
+            <h3><i class="fas fa-glass-water"></i> Drink Water</h3>
+            <p>First thing in the morning</p>
+            <div>
+                <span class="streak-counter">7-day streak</span>
+                <button class="check-button">✓</button>
+            </div>
+        </div>
+        
+        <div class="habit-card">
+            <h3><i class="fas fa-running"></i> Morning Exercise</h3>
+            <p>15 minute workout</p>
+            <div>
+                <span class="streak-counter">5-day streak</span>
+                <button class="check-button">✓</button>
+            </div>
+        </div>
+        
+        <!-- Add more habits as needed -->
+        
+        <div class="xp-counter">
+            <h3>Your Progress</h3>
+            <div class="level-bar">
+                <div class="level-progress" style="width: 65%;"></div>
+            </div>
+            <p>Level 3 • 650/1000 XP</p>
+        </div>
+    </div>
+
+    <script>
+        // Simple interaction for GitHub Pages compatibility
+        document.querySelectorAll('.check-button').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('completed');
+                this.textContent = this.classList.contains('completed') ? '✓' : '○';
+                
+                // In a full app, you would update streaks and XP here
+                const streakCounter = this.closest('.habit-card').querySelector('.streak-counter');
+                if (this.classList.contains('completed')) {
+                    streakCounter.textContent = parseInt(streakCounter.textContent) + 1 + '-day streak';
+                }
+            });
+        });
+        
+        // Fire animation randomization
+        const fireIcon = document.querySelector('.fire-animation');
+        setInterval(() => {
+            fireIcon.style.animation = 'none';
+            setTimeout(() => {
+                fireIcon.style.animation = 'pulse 1s infinite';
+            }, 10);
+        }, 3000);
+    </script>
+</body>
+</html>
