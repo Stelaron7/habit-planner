@@ -1,18 +1,229 @@
-const missions = [
-    {
-        title: "First Flight",
-        description: "Reach the orbital station",
-        reward: 1000,
-        completed: false
-    }
-];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stelaron - Open World Adventure</title>
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            font-family: 'Arial', sans-serif;
+        }
+        #welcome-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 100;
+            transition: opacity 1s;
+        }
+        #game-title {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px #00ffff;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        #start-button {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            background: #00b894;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        #start-button:hover {
+            background: #00cec9;
+            transform: scale(1.1);
+        }
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 10;
+            display: none;
+        }
+        #loading-bar {
+            width: 300px;
+            height: 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        #loading-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00b894, #00cec9);
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen">
+        <h1 id="game-title">STELARON</h1>
+        <div id="loading-bar">
+            <div id="loading-progress"></div>
+        </div>
+        <button id="start-button" style="display:none">BEGIN JOURNEY</button>
+    </div>
 
-function showMission(mission) {
-    const missionUI = document.createElement('div');
-    missionUI.innerHTML = `
-        <h3>${mission.title}</h3>
-        <p>${mission.description}</p>
-        <p>Reward: $${mission.reward}</p>
-    `;
-    document.body.appendChild(missionUI);
-}
+    <!-- Game UI -->
+    <div id="ui">
+        <div>HEALTH: <span id="health">100</span>%</div>
+        <div>ENERGY: <span id="energy">100</span>%</div>
+        <div>CREDITS: $<span id="credits">5000</span></div>
+    </div>
+
+    <!-- Three.js from CDN with fallback -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        if (typeof THREE === 'undefined') {
+            document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"><\/script>');
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+
+    <script>
+        // 1. PRELOAD ASSETS
+        function updateProgress(percent) {
+            document.getElementById('loading-progress').style.width = percent + '%';
+            if (percent >= 100) {
+                document.getElementById('start-button').style.display = 'block';
+            }
+        }
+
+        // 2. INITIALIZE GAME WHEN START BUTTON CLICKED
+        document.getElementById('start-button').addEventListener('click', function() {
+            // Hide welcome screen
+            document.getElementById('welcome-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('welcome-screen').style.display = 'none';
+                document.getElementById('ui').style.display = 'block';
+                initGame();
+            }, 1000);
+        });
+
+        // 3. CORE GAME FUNCTION
+        function initGame() {
+            // Setup scene
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x050510);
+            
+            // Setup camera
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+            camera.position.y = 5;
+            
+            // Setup renderer
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            document.body.appendChild(renderer.domElement);
+            
+            // Add stars
+            const starsGeometry = new THREE.BufferGeometry();
+            const starsMaterial = new THREE.PointsMaterial({ color: 0xffffff });
+            const starsVertices = [];
+            
+            for (let i = 0; i < 10000; i++) {
+                starsVertices.push(
+                    Math.random() * 2000 - 1000,
+                    Math.random() * 2000 - 1000,
+                    Math.random() * 2000 - 1000
+                );
+            }
+            
+            starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+            const stars = new THREE.Points(starsGeometry, starsMaterial);
+            scene.add(stars);
+            
+            // Add simple planet
+            const planetGeometry = new THREE.SphereGeometry(50, 32, 32);
+            const planetMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x3a5f0b,
+                roughness: 0.8,
+                metalness: 0.2
+            });
+            const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+            planet.position.set(0, -60, 0);
+            planet.receiveShadow = true;
+            scene.add(planet);
+            
+            // Add player
+            const playerGeometry = new THREE.CapsuleGeometry(0.5, 1, 4, 8);
+            const playerMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+            const player = new THREE.Mesh(playerGeometry, playerMaterial);
+            player.position.y = 10;
+            scene.add(player);
+            
+            // Add light
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(5, 10, 7);
+            light.castShadow = true;
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404040));
+            
+            // Controls
+            const controls = new THREE.PointerLockControls(player, document.body);
+            scene.add(controls.getObject());
+            
+            // Start game when clicked
+            document.addEventListener('click', function() {
+                if (!document.pointerLockElement) {
+                    document.body.requestPointerLock();
+                }
+            });
+            
+            // Game loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Simple rotation to show it's working
+                planet.rotation.y += 0.001;
+                stars.rotation.y -= 0.0002;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+        
+        // 4. SIMULATE LOADING PROGRESS
+        let progress = 0;
+        const loadingInterval = setInterval(function() {
+            progress += Math.random() * 10;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(loadingInterval);
+            }
+            updateProgress(progress);
+        }, 200);
+    </script>
+</body>
+</html>
