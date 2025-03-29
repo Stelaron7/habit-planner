@@ -3,187 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumFlow | AI-Powered Habit Architect</title>
+    <title>Sunrise Habits | Start Your Day Right</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== GLOBAL STYLES ===== */
+        /* ===== SUMMER THEME ===== */
         :root {
-            --quantum-blue: #00f0ff;
-            --neuro-purple: #8a2be2;
-            --dark-space: #0a0a1a;
-            --light-void: #1e1e2e;
-            --success-green: #00ff9d;
+            --sunrise-orange: #FF7E5F;
+            --sky-blue: #6EC3F7;
+            --sunshine-yellow: #FFD166;
+            --fresh-green: #06D6A0;
+            --light-sand: #FFF5E6;
+            --white: #FFFFFF;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
-            background: var(--dark-space);
-            color: white;
+            background: var(--light-sand);
+            color: #333;
             line-height: 1.6;
-            overflow-x: hidden;
         }
 
-        /* ===== HERO SECTION (4K BG) ===== */
-        .hero {
-            height: 100vh;
-            background: 
-                linear-gradient(rgba(10, 10, 26, 0.7), rgba(10, 10, 26, 0.9)),
-                url('https://images.unsplash.com/photo-1677442135136-760c813a743d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3840&q=80') center/cover;
+        /* ===== NAVIGATION ===== */
+        nav {
+            background: var(--white);
+            padding: 1rem 5%;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--sunrise-orange);
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            margin-left: 1.5rem;
+            color: #555;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--sunrise-orange);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
             text-align: center;
-            padding: 0 2rem;
+            padding: 5rem 5% 7rem;
+            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), 
+                        url('https://images.unsplash.com/photo-1490730141103-6cac27aaab94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80') center/cover;
         }
 
         .hero h1 {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(90deg, var(--quantum-blue), var(--neuro-purple));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: fadeIn 1.5s ease;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: var(--sunrise-orange);
         }
 
         .hero p {
-            font-size: 1.5rem;
-            max-width: 800px;
-            margin-bottom: 3rem;
-            opacity: 0.9;
-            animation: fadeIn 2s ease;
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            color: #555;
         }
 
         .cta-button {
-            background: linear-gradient(135deg, var(--quantum-blue), var(--neuro-purple));
+            background: var(--sunrise-orange);
             color: white;
             border: none;
             padding: 1rem 2.5rem;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             border-radius: 50px;
             cursor: pointer;
             transition: transform 0.3s, box-shadow 0.3s;
-            animation: pulse 2s infinite;
         }
 
         .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 240, 255, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 126, 95, 0.3);
         }
 
-        /* ===== NEUROSYNC DASHBOARD ===== */
-        .dashboard {
-            padding: 6rem 10%;
-            background: var(--light-void);
+        /* ===== HABIT TRACKER ===== */
+        .habit-tracker {
+            max-width: 1000px;
+            margin: -3rem auto 5rem;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
-        .dashboard-header {
+        .tracker-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
         }
 
-        .dashboard-header h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg, var(--quantum-blue), var(--neuro-purple));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        .tracker-header h2 {
+            font-size: 2.2rem;
+            color: var(--sunrise-orange);
+            margin-bottom: 0.5rem;
         }
 
-        .habit-cards {
+        .tracker-header p {
+            color: #777;
+        }
+
+        .habit-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            gap: 1.5rem;
         }
 
         .habit-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 2px solid rgba(255, 126, 95, 0.1);
             transition: transform 0.3s;
         }
 
         .habit-card:hover {
-            transform: translateY(-10px);
-            border: 1px solid var(--quantum-blue);
+            transform: translateY(-5px);
+            border-color: rgba(255, 126, 95, 0.3);
         }
 
         .habit-card h3 {
-            font-size: 1.5rem;
+            color: var(--sunrise-orange);
             margin-bottom: 1rem;
-            color: var(--quantum-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .habit-card p {
-            opacity: 0.8;
+            color: #666;
             margin-bottom: 1.5rem;
+            font-size: 0.95rem;
         }
 
-        .progress-bar {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+        .streak-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             margin-bottom: 1rem;
-            overflow: hidden;
+            color: var(--fresh-green);
+            font-weight: 600;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--quantum-blue), var(--success-green));
-            border-radius: 4px;
-            width: 65%; /* Dynamic in real app */
+        .streak-counter i {
+            color: var(--fresh-green);
         }
 
-        .adjust-button {
-            background: transparent;
-            color: var(--quantum-blue);
-            border: 1px solid var(--quantum-blue);
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
+        .complete-button {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--fresh-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: background 0.3s;
         }
 
-        .adjust-button:hover {
-            background: var(--quantum-blue);
-            color: var(--dark-space);
+        .complete-button:hover {
+            background: #05C293;
         }
 
-        /* ===== AI RECOMMENDATIONS ===== */
-        .ai-recommendations {
-            padding: 6rem 10%;
-            background: var(--dark-space);
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            padding: 5rem 5%;
+            background: var(--sky-blue);
             text-align: center;
         }
 
-        .ai-card {
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid var(--quantum-blue);
-            border-radius: 16px;
-            padding: 2rem;
-            max-width: 800px;
+        .testimonials h2 {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        .ai-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--quantum-blue);
+        .testimonial-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .ai-card p {
+        .testimonial-card p {
+            font-style: italic;
             margin-bottom: 1.5rem;
-            opacity: 0.9;
+            color: #555;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--light-sand);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--sunrise-orange);
+            font-weight: bold;
+        }
+
+        .author-info h4 {
+            color: var(--sunrise-orange);
+        }
+
+        .author-info p {
+            color: #777;
+            font-style: normal;
+            font-size: 0.9rem;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--white);
+            padding: 2rem 5%;
+            text-align: center;
+            color: #777;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links a {
+            color: #777;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--sunrise-orange);
         }
 
         /* ===== ANIMATIONS ===== */
@@ -192,129 +275,168 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
             }
             .hero p {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
-            .dashboard, .ai-recommendations {
-                padding: 4rem 5%;
+            .habit-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
+    <!-- ===== NAVIGATION ===== -->
+    <nav>
+        <a href="#" class="logo">Sunrise Habits</a>
+        <div class="nav-links">
+            <a href="#tracker">Habit Tracker</a>
+            <a href="#testimonials">Success Stories</a>
+            <a href="#" class="cta-button">Get Started</a>
+        </div>
+    </nav>
+
     <!-- ===== HERO SECTION ===== -->
     <section class="hero">
-        <h1>QuantumFlow Habit Architect</h1>
-        <p>Your habits <strong>auto-adjust</strong> based on biometrics, energy levels, and AI optimization.</p>
-        <button class="cta-button">Start Free Trial</button>
+        <h1>Build Your Perfect Morning</h1>
+        <p>Start your day with energy and purpose. Our simple habit tracker helps you create a morning routine that sticks.</p>
+        <button class="cta-button">Start Your 7-Day Challenge</button>
     </section>
 
-    <!-- ===== NEUROSYNC DASHBOARD ===== -->
-    <section class="dashboard">
-        <div class="dashboard-header">
-            <h2>Your NeuroSync Dashboard</h2>
-            <p>AI-powered habits that adapt to your daily performance</p>
+    <!-- ===== HABIT TRACKER ===== -->
+    <section class="habit-tracker" id="tracker">
+        <div class="tracker-header">
+            <h2>Your Morning Routine</h2>
+            <p>Track your progress and build streaks</p>
         </div>
-        <div class="habit-cards">
-            <!-- Card 1: Morning Routine -->
+        <div class="habit-grid">
+            <!-- Habit 1 -->
             <div class="habit-card">
-                <h3>Morning Quantum Routine</h3>
-                <p>Adjusted based on sleep quality & energy</p>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 78%"></div>
+                <h3><i class="fas fa-glass-water"></i> Hydrate First</h3>
+                <p>Drink a glass of water within 10 minutes of waking up</p>
+                <div class="streak-counter">
+                    <i class="fas fa-fire"></i> 5-day streak
                 </div>
-                <p><strong>Today's AI Adjustment:</strong> +15min meditation (low sleep score)</p>
-                <button class="adjust-button">Optimize Further</button>
+                <button class="complete-button">Mark as Done</button>
             </div>
 
-            <!-- Card 2: Work Focus -->
+            <!-- Habit 2 -->
             <div class="habit-card">
-                <h3>Deep Work Blocks</h3>
-                <p>Dynamically scheduled based on focus levels</p>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 65%"></div>
+                <h3><i class="fas fa-sun"></i> Morning Sunlight</h3>
+                <p>Get 10 minutes of sunlight before checking your phone</p>
+                <div class="streak-counter">
+                    <i class="fas fa-fire"></i> 3-day streak
                 </div>
-                <p><strong>Today's AI Adjustment:</strong> Shorter sessions (high stress)</p>
-                <button class="adjust-button">Optimize Further</button>
+                <button class="complete-button">Mark as Done</button>
             </div>
 
-            <!-- Card 3: Fitness -->
+            <!-- Habit 3 -->
             <div class="habit-card">
-                <h3>Biometric Training</h3>
-                <p>Workouts adapt to recovery & HRV</p>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 92%"></div>
+                <h3><i class="fas fa-book-open"></i> Read 10 Pages</h3>
+                <p>Read something inspiring to start your day</p>
+                <div class="streak-counter">
+                    <i class="fas fa-fire"></i> 7-day streak
                 </div>
-                <p><strong>Today's AI Adjustment:</strong> Yoga instead of HIIT (high fatigue)</p>
-                <button class="adjust-button">Optimize Further</button>
+                <button class="complete-button">Mark as Done</button>
             </div>
         </div>
     </section>
 
-    <!-- ===== AI RECOMMENDATIONS ===== -->
-    <section class="ai-recommendations">
-        <div class="ai-card">
-            <h3><i class="fas fa-robot"></i> AI Recommendation</h3>
-            <p>"Based on your <strong>72% sleep efficiency</strong> and <strong>elevated stress markers</strong>, we recommend:"</p>
-            <ul style="text-align: left; margin: 1rem 0 2rem; padding-left: 2rem;">
-                <li>20min breathwork instead of morning run</li>
-                <li>90min focused work blocks (instead of 120min)</li>
-                <li>Electrolyte boost at 3PM</li>
-            </ul>
-            <button class="cta-button">Apply AI Suggestions</button>
+    <!-- ===== TESTIMONIALS ===== -->
+    <section class="testimonials" id="testimonials">
+        <h2>Loved By Morning People</h2>
+        <div class="testimonial-grid">
+            <!-- Testimonial 1 -->
+            <div class="testimonial-card">
+                <p>"I went from hitting snooze 5 times to waking up energized. Sunrise Habits changed my life!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">S</div>
+                    <div class="author-info">
+                        <h4>Sarah J.</h4>
+                        <p>Teacher, 32</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 2 -->
+            <div class="testimonial-card">
+                <p>"The streak counter keeps me motivated. I haven't missed my morning routine in 3 weeks!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">M</div>
+                    <div class="author-info">
+                        <h4>Mike T.</h4>
+                        <p>Freelancer, 28</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 3 -->
+            <div class="testimonial-card">
+                <p>"Finally a habit tracker that focuses on mornings—when it matters most!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">A</div>
+                    <div class="author-info">
+                        <h4>Anna L.</h4>
+                        <p>Entrepreneur, 35</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-links">
+            <a href="#">About</a>
+            <a href="#">Privacy</a>
+            <a href="#">Contact</a>
+        </div>
+        <p>© 2023 Sunrise Habits. All rights reserved.</p>
+    </footer>
 
     <script>
-        // ===== FUNCTIONALITY =====
-        // 1. Dynamic Habit Adjustments
-        const adjustButtons = document.querySelectorAll('.adjust-button');
-        adjustButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const card = button.closest('.habit-card');
-                const progress = card.querySelector('.progress-fill');
-                const newWidth = Math.min(100, parseInt(progress.style.width) + 10);
-                progress.style.width = `${newWidth}%`;
+        // ===== HABIT TRACKER FUNCTIONALITY =====
+        const habitButtons = document.querySelectorAll('.complete-button');
+        
+        habitButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const card = this.closest('.habit-card');
+                const streakCounter = card.querySelector('.streak-counter');
+                const currentStreak = parseInt(streakCounter.textContent);
                 
-                // Simulate AI adjustment
-                const adjustments = [
-                    "Added 5min cooldown",
-                    "Reduced intensity by 20%",
-                    "Scheduled for peak energy time",
-                    "Added recovery protocol"
-                ];
-                const randomAdjustment = adjustments[Math.floor(Math.random() * adjustments.length)];
-                card.querySelector('p:last-of-type').innerHTML = `<strong>AI Update:</strong> ${randomAdjustment}`;
+                // Update streak
+                streakCounter.innerHTML = `<i class="fas fa-fire"></i> ${currentStreak + 1}-day streak`;
+                
+                // Visual feedback
+                this.textContent = 'Done!';
+                this.style.background = 'var(--sunshine-yellow)';
+                
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    this.textContent = 'Mark as Done';
+                    this.style.background = 'var(--fresh-green)';
+                }, 2000);
             });
         });
 
-        // 2. Apply AI Recommendations
-        document.querySelector('.ai-recommendations .cta-button').addEventListener('click', () => {
-            alert("🚀 AI recommendations applied! Your habits have been optimized.");
-        });
-
-        // 3. Start Free Trial
-        document.querySelector('.hero .cta-button').addEventListener('click', () => {
-            window.scrollTo({
-                top: document.querySelector('.dashboard').offsetTop - 100,
-                behavior: 'smooth'
+        // ===== SMOOTH SCROLLING =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
         });
 
-        // 4. Animate on scroll
+        // ===== ANIMATE ELEMENTS ON SCROLL =====
         const animateOnScroll = () => {
-            const elements = document.querySelectorAll('.dashboard, .ai-recommendations');
+            const elements = document.querySelectorAll('.habit-card, .testimonial-card');
+            
             elements.forEach(el => {
                 const rect = el.getBoundingClientRect();
                 if (rect.top < window.innerHeight - 100) {
@@ -324,12 +446,12 @@
             });
         };
 
-        // Initialize
+        // Initialize animations
         window.addEventListener('load', () => {
-            document.querySelectorAll('.dashboard, .ai-recommendations').forEach(el => {
+            document.querySelectorAll('.habit-card, .testimonial-card').forEach(el => {
                 el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = 'all 0.8s ease';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'all 0.6s ease';
             });
             animateOnScroll();
         });
