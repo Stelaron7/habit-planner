@@ -5,79 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stelaron - Dieselpunk Adventure</title>
     <style>
-        /* RESETS */
+        /* DIESELPUNK STYLES */
         body, html { 
             margin: 0; 
             padding: 0; 
             overflow: hidden; 
             font-family: 'Courier New', monospace;
+            background: #1a120b;
+            color: #e6d5b8;
         }
         
-        /* WELCOME SCREEN - DIESELPUNK THEME */
         #welcome-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #1a120b url('https://images.unsplash.com/photo-1518562180175-34a163b1c920?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center;
-            background-size: cover;
+            background: #1a120b url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231a120b"/><path d="M20,20 L80,20 L80,80 L20,80 Z" stroke="%23e6d5b8" stroke-width="2" fill="none"/></svg>');
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: #e6d5b8;
             z-index: 1000;
             transition: opacity 1s;
-            overflow: hidden;
-        }
-        
-        #welcome-screen::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(26, 18, 11, 0.7);
-            z-index: -1;
         }
         
         #title-container {
-            text-align: center;
-            padding: 2rem;
-            background: rgba(26, 18, 11, 0.8);
+            background: rgba(26, 18, 11, 0.9);
             border: 3px solid #e6d5b8;
-            box-shadow: 0 0 20px rgba(230, 213, 184, 0.3);
+            padding: 2rem;
+            text-align: center;
             max-width: 80%;
         }
         
         #game-title {
-            font-size: 4.5rem;
+            font-size: 4rem;
             margin: 0;
-            font-weight: normal;
             letter-spacing: 5px;
             text-transform: uppercase;
             color: #e6d5b8;
-            text-shadow: 3px 3px 0 #1a120b, 
-                         6px 6px 0 #3e2723;
-        }
-        
-        #game-subtitle {
-            font-size: 1.2rem;
-            margin-top: 0.5rem;
-            letter-spacing: 3px;
+            text-shadow: 3px 3px 0 #3e2723;
         }
         
         #loading-container {
             margin-top: 2rem;
             width: 300px;
-        }
-        
-        #loading-text {
-            text-align: center;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
         }
         
         #loading-bar {
@@ -100,88 +72,29 @@
             background: transparent;
             border: 2px solid #e6d5b8;
             color: #e6d5b8;
-            font-family: 'Courier New', monospace;
+            font-family: inherit;
             font-size: 1.2rem;
-            letter-spacing: 2px;
             cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
             display: none;
         }
         
-        #start-button:hover {
-            background: rgba(230, 213, 184, 0.2);
-        }
-        
-        #start-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(230, 213, 184, 0.4), transparent);
-            transition: all 0.5s;
-        }
-        
-        #start-button:hover::before {
-            left: 100%;
-        }
-        
-        /* GAME UI - DIESELPUNK STYLE */
-        #game-ui {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            color: #e6d5b8;
-            background: rgba(26, 18, 11, 0.8);
-            padding: 15px;
-            border: 2px solid #e6d5b8;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            display: none;
-            z-index: 100;
-        }
-        
-        .stat-bar {
-            height: 8px;
-            background: #3e2723;
-            border-radius: 4px;
-            margin: 5px 0 15px 0;
-            overflow: hidden;
-        }
-        
-        .stat-fill {
-            height: 100%;
-            transition: width 0.3s;
-        }
-        
-        #health-fill { background: #c62828; }
-        #energy-fill { background: #ff8f00; }
-        #fuel-fill { background: #e6d5b8; }
-        
-        /* MINIMAP */
-        #minimap {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 150px;
-            height: 150px;
-            background: rgba(26, 18, 11, 0.8);
-            border: 2px solid #e6d5b8;
-            border-radius: 5px;
-            display: none;
-            z-index: 100;
-        }
-        
-        /* GAME CONTAINER */
         #game-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            display: none;
+        }
+        
+        #ui {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(26, 18, 11, 0.9);
+            padding: 15px;
+            border: 2px solid #e6d5b8;
+            border-radius: 5px;
             display: none;
         }
     </style>
@@ -191,134 +104,87 @@
     <div id="welcome-screen">
         <div id="title-container">
             <h1 id="game-title">Stelaron</h1>
-            <p id="game-subtitle">A Dieselpunk Odyssey</p>
-            
             <div id="loading-container">
-                <div id="loading-text">INITIALIZING MECHANICAL SYSTEMS</div>
                 <div id="loading-bar">
                     <div id="loading-progress"></div>
                 </div>
             </div>
-            
-            <button id="start-button">ENGAGE POWER</button>
+            <button id="start-button">FIRE UP ENGINES</button>
         </div>
     </div>
-    
+
     <!-- GAME UI -->
-    <div id="game-ui">
-        <div>STATUS REPORT</div>
-        <div>HEALTH: <span id="health-value">100</span>%</div>
-        <div class="stat-bar"><div id="health-fill" class="stat-fill" style="width: 100%"></div></div>
-        
-        <div>ENERGY: <span id="energy-value">100</span>%</div>
-        <div class="stat-bar"><div id="energy-fill" class="stat-fill" style="width: 100%"></div></div>
-        
-        <div>FUEL: <span id="fuel-value">100</span>%</div>
-        <div class="stat-bar"><div id="fuel-fill" class="stat-fill" style="width: 100%"></div></div>
+    <div id="ui">
+        <div>STEAM PRESSURE: <span id="steam">85%</span></div>
+        <div>COAL RESERVE: <span id="coal">72%</span></div>
+        <div>MECHANICAL INTEGRITY: <span id="integrity">100%</span></div>
     </div>
-    
-    <!-- MINIMAP -->
-    <div id="minimap"></div>
-    
+
     <!-- GAME CONTAINER -->
     <div id="game-container"></div>
-    
-    <!-- THREE.JS FROM CDN WITH LOCAL FALLBACK -->
+
+    <!-- THREE.JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // FALLBACK IF CDN FAILS
-        if (typeof THREE === 'undefined') {
-            document.write('<script src="three.min.js"><\/script>');
-        }
-    </script>
-    
-    <script>
-        // 1. PRELOAD WITH VISUAL FEEDBACK
-        let assetsLoaded = 0;
-        const totalAssets = 5; // Simple count for progress
-        
-        function updateProgress() {
-            assetsLoaded++;
-            const percent = Math.min(100, Math.floor((assetsLoaded / totalAssets) * 100));
-            document.getElementById('loading-progress').style.width = percent + '%';
-            
-            // Update loading text based on progress
-            const loadingPhrases = [
-                "CALIBRATING GEARS",
-                "PRESSURIZING CHAMBERS",
-                "IGNITING BOILERS",
-                "SYNCHRONIZING COGS",
-                "ENGAGING DRIVESHAFT"
-            ];
-            document.getElementById('loading-text').textContent = 
-                loadingPhrases[Math.min(loadingPhrases.length-1, Math.floor(percent/20))];
-            
-            if (percent >= 100) {
+        // 1. LOADING SEQUENCE
+        let loadProgress = 0;
+        const loadingInterval = setInterval(() => {
+            loadProgress += 10 + Math.random() * 10;
+            if (loadProgress >= 100) {
+                loadProgress = 100;
+                clearInterval(loadingInterval);
                 document.getElementById('start-button').style.display = 'block';
             }
-        }
-        
-        // Simulate asset loading
-        const loadInterval = setInterval(() => {
-            updateProgress();
-            if (assetsLoaded >= totalAssets) clearInterval(loadInterval);
-        }, 600);
-        
-        // 2. INITIALIZE GAME WHEN BUTTON CLICKED
-        document.getElementById('start-button').addEventListener('click', initGame);
-        
-        function initGame() {
-            // Hide welcome screen
+            document.getElementById('loading-progress').style.width = loadProgress + '%';
+        }, 300);
+
+        // 2. START GAME
+        document.getElementById('start-button').addEventListener('click', () => {
             document.getElementById('welcome-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('welcome-screen').style.display = 'none';
-                document.getElementById('game-ui').style.display = 'block';
-                document.getElementById('minimap').style.display = 'block';
-                document.getElementById('game-container').style.display = 'block';
-                
-                startGame();
+                document.getElementById('ui').style.display = 'block';
+                initGame();
             }, 1000);
-        }
-        
-        // 3. CORE GAME FUNCTION
-        function startGame() {
-            // Create scene
+        });
+
+        // 3. WORKING 3D DIESELPUNK WORLD
+        function initGame() {
+            const container = document.getElementById('game-container');
+            container.style.display = 'block';
+            
+            // SCENE
             const scene = new THREE.Scene();
             scene.background = new THREE.Color(0x1a120b);
             
-            // Create camera
-            const camera = new THREE.PerspectiveCamera(
-                75, 
-                window.innerWidth / window.innerHeight, 
-                0.1, 
-                1000
-            );
+            // CAMERA
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
             camera.position.set(0, 5, 10);
             
-            // Create renderer
-            const renderer = new THREE.WebGLRenderer({
-                antialias: true,
-                powerPreference: "high-performance"
-            });
+            // RENDERER
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.shadowMap.enabled = true;
-            document.getElementById('game-container').appendChild(renderer.domElement);
+            container.appendChild(renderer.domElement);
             
-            // SIMPLE DIESELPUNK ENVIRONMENT (Guaranteed to render)
+            // LIGHTS
+            const directionalLight = new THREE.DirectionalLight(0xffecd2, 0.8);
+            directionalLight.position.set(5, 10, 7);
+            scene.add(directionalLight);
             
-            // Ground
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            
+            // DIESELPUNK GROUND
             const groundGeometry = new THREE.PlaneGeometry(100, 100);
             const groundMaterial = new THREE.MeshStandardMaterial({ 
                 color: 0x3e2723,
-                roughness: 0.9,
-                metalness: 0.1
+                roughness: 0.9
             });
             const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-            ground.rotation.x = -Math.PI / 2;
-            ground.receiveShadow = true;
+            ground.rotation.x = -Math.PI/2;
             scene.add(ground);
             
-            // Industrial building
+            // FACTORY BUILDING
             const buildingGeometry = new THREE.BoxGeometry(15, 20, 10);
             const buildingMaterial = new THREE.MeshStandardMaterial({ 
                 color: 0x5d4037,
@@ -327,10 +193,9 @@
             });
             const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
             building.position.set(0, 10, -20);
-            building.castShadow = true;
             scene.add(building);
             
-            // Pipes
+            // STEAM PIPES
             const pipeGeometry = new THREE.CylinderGeometry(0.5, 0.5, 15, 8);
             const pipeMaterial = new THREE.MeshStandardMaterial({ 
                 color: 0x8d6e63,
@@ -341,16 +206,15 @@
             for (let i = 0; i < 5; i++) {
                 const pipe = new THREE.Mesh(pipeGeometry, pipeMaterial);
                 pipe.position.set(-8 + i * 4, 7.5, -25);
-                pipe.rotation.z = Math.PI / 2;
+                pipe.rotation.z = Math.PI/2;
                 scene.add(pipe);
             }
             
-            // Steam
+            // STEAM EFFECT
             const steamParticles = new THREE.BufferGeometry();
-            const steamCount = 100;
-            const steamPositions = new Float32Array(steamCount * 3);
+            const steamPositions = new Float32Array(100 * 3);
             
-            for (let i = 0; i < steamCount; i++) {
+            for (let i = 0; i < 100; i++) {
                 steamPositions[i * 3] = Math.random() * 10 - 5;
                 steamPositions[i * 3 + 1] = Math.random() * 5 + 15;
                 steamPositions[i * 3 + 2] = -25 + Math.random() * 2;
@@ -366,49 +230,20 @@
             const steam = new THREE.Points(steamParticles, steamMaterial);
             scene.add(steam);
             
-            // Player (simplified for performance)
+            // PLAYER (MECHANICAL SUIT)
             const playerGeometry = new THREE.BoxGeometry(1, 2, 1);
-            const playerMaterial = new THREE.MeshStandardMaterial({ color: 0x8d6e63 });
+            const playerMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x8d6e63,
+                roughness: 0.7,
+                metalness: 0.5
+            });
             const player = new THREE.Mesh(playerGeometry, playerMaterial);
             player.position.y = 1;
             scene.add(player);
             
-            // Lighting (critical for visibility)
-            const ambientLight = new THREE.AmbientLight(0x404040);
-            scene.add(ambientLight);
-            
-            const directionalLight = new THREE.DirectionalLight(0xffecd2, 0.8);
-            directionalLight.position.set(5, 10, 7);
-            directionalLight.castShadow = true;
-            scene.add(directionalLight);
-            
-            // Controls
-            const controls = new THREE.PointerLockControls(player, document.body);
-            scene.add(controls.getObject());
-            
-            // Start game when clicked
-            document.addEventListener('click', function() {
-                if (!document.pointerLockElement) {
-                    document.body.requestPointerLock();
-                }
-            });
-            
-            // Movement
-            const moveSpeed = 0.1;
-            const keys = {};
-            
-            document.addEventListener('keydown', (e) => keys[e.code] = true);
-            document.addEventListener('keyup', (e) => keys[e.code] = false);
-            
-            // Game loop
+            // ANIMATION LOOP
             function animate() {
                 requestAnimationFrame(animate);
-                
-                // Simple movement
-                if (keys['KeyW']) player.position.z -= moveSpeed;
-                if (keys['KeyS']) player.position.z += moveSpeed;
-                if (keys['KeyA']) player.position.x -= moveSpeed;
-                if (keys['KeyD']) player.position.x += moveSpeed;
                 
                 // Rotate steam for effect
                 steam.rotation.y += 0.01;
@@ -418,8 +253,8 @@
             
             animate();
             
-            // Handle window resize
-            window.addEventListener('resize', function() {
+            // Handle resize
+            window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
