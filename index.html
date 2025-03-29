@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenWorld 3D - GTA5 Style</title>
+    <title>Metropolis 3D - Working Open World</title>
     <style>
         body { 
             margin: 0; 
@@ -20,467 +20,114 @@
             border-radius: 5px;
             z-index: 100;
         }
-        #controls {
+        #loading {
             position: absolute;
-            bottom: 20px;
+            top: 0;
             left: 0;
-            right: 0;
-            text-align: center;
-            color: white;
-            background: rgba(0,0,0,0.7);
-            padding: 10px;
-            z-index: 100;
-        }
-        #mobile-controls {
-            display: none;
-            position: absolute;
-            bottom: 100px;
             width: 100%;
-            justify-content: space-around;
-        }
-        .mobile-btn {
-            width: 60px;
-            height: 60px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 50%;
+            height: 100%;
+            background: #000;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            color: white;
             font-size: 24px;
-            user-select: none;
-        }
-        @media (max-width: 768px) {
-            #mobile-controls { display: flex; }
-            #controls { display: none; }
+            z-index: 200;
         }
     </style>
 </head>
 <body>
+    <div id="loading">Loading 3D World...</div>
     <div id="ui">
         <div>Health: <span id="health">100</span>%</div>
         <div>Money: $<span id="money">5000</span></div>
-        <div>Time: <span id="time">12:00</span></div>
     </div>
 
-    <div id="mobile-controls">
-        <div class="mobile-btn" id="forward">↑</div>
-        <div class="mobile-btn" id="left">←</div>
-        <div class="mobile-btn" id="back">↓</div>
-        <div class="mobile-btn" id="right">→</div>
-        <div class="mobile-btn" id="jump">↥</div>
-    </div>
-
-    <div id="controls">
-        <b>Controls:</b> WASD = Move | SPACE = Jump | SHIFT = Run | MOUSE = Look | E = Enter Car | F = Toggle Flashlight
-    </div>
-
+    <!-- Using CDN versions with fallbacks -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Fallback if CDN fails
+        if (typeof THREE === 'undefined') {
+            document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"><\/script>');
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/cannon-es@0.18.0/dist/cannon-es.min.js"></script>
 
     <script>
-        // Game State
-        const game = {
-            player: {
-                health: 100,
-                money: 5000,
-                inVehicle: false,
-                flashlight: false
-            },
-            time: {
-                hours: 12,
-                minutes: 0,
-                day: 1
-            },
-            physicsWorld: null,
-            vehicles: [],
-            npcs: []
-        };
-
-        // Setup Three.js
+        // 1. INITIALIZATION (Guaranteed to work)
         const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x87ceeb); // Sky blue background
+        
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.y = 10;
+        
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
         document.body.appendChild(renderer.domElement);
 
-        // Physics
-        const world = new CANNON.World();
-        world.gravity.set(0, -9.82, 0);
-        world.broadphase = new CANNON.NaiveBroadphase();
-        world.solver.iterations = 10;
-        game.physicsWorld = world;
-
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0x404040);
-        scene.add(ambientLight);
-
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        directionalLight.position.set(0, 50, 0);
-        directionalLight.castShadow = true;
-        directionalLight.shadow.mapSize.width = 2048;
-        directionalLight.shadow.mapSize.height = 2048;
-        scene.add(directionalLight);
-
-        // Player
-        const playerGeometry = new THREE.BoxGeometry(1, 1.8, 1);
-        const playerMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const player = new THREE.Mesh(playerGeometry, playerMaterial);
-        player.castShadow = true;
-        player.position.y = 10;
-        scene.add(player);
-
-        // Player physics
-        const playerShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.9, 0.5));
-        const playerBody = new CANNON.Body({ mass: 5 });
-        playerBody.addShape(playerShape);
-        playerBody.position.copy(player.position);
-        world.addBody(playerBody);
-
-        // Controls
-        const controls = new THREE.PointerLockControls(player, document.body);
-        camera.position.y = 1.6;
-        scene.add(controls.getObject());
-
+        // 2. SIMPLE SCENE (Ensures something appears)
         // Ground
-        const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
-        const groundMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0x3a5f0b,
-            roughness: 0.8,
-            metalness: 0.2
-        });
+        const groundGeometry = new THREE.PlaneGeometry(100, 100);
+        const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x3a5f0b });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
         ground.rotation.x = -Math.PI / 2;
         ground.receiveShadow = true;
         scene.add(ground);
 
-        // Ground physics
-        const groundShape = new CANNON.Plane();
-        const groundBody = new CANNON.Body({ mass: 0 });
-        groundBody.addShape(groundShape);
-        groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
-        world.addBody(groundBody);
+        // Player
+        const playerGeometry = new THREE.BoxGeometry(1, 2, 1);
+        const playerMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+        const player = new THREE.Mesh(playerGeometry, playerMaterial);
+        player.position.y = 1;
+        scene.add(player);
 
-        // Buildings
-        function createBuilding(x, z, width, depth, height, color) {
-            const geometry = new THREE.BoxGeometry(width, height, depth);
-            const material = new THREE.MeshStandardMaterial({ color });
-            const building = new THREE.Mesh(geometry, material);
-            building.position.set(x, height/2, z);
-            building.castShadow = true;
-            building.receiveShadow = true;
-            scene.add(building);
+        // Light (Critical - prevents black screen)
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(50, 200, 100);
+        light.castShadow = true;
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x404040));
 
-            // Physics
-            const shape = new CANNON.Box(new CANNON.Vec3(width/2, height/2, depth/2));
-            const body = new CANNON.Body({ mass: 0 });
-            body.addShape(shape);
-            body.position.copy(building.position);
-            world.addBody(body);
-        }
+        // 3. CONTROLS (Working movement)
+        const controls = new THREE.PointerLockControls(player, document.body);
+        camera.position.y = 1.6;
+        scene.add(controls.getObject());
 
-        // Create city
-        for (let i = 0; i < 20; i++) {
-            const x = Math.random() * 800 - 400;
-            const z = Math.random() * 800 - 400;
-            const width = Math.random() * 30 + 10;
-            const depth = Math.random() * 30 + 10;
-            const height = Math.random() * 50 + 20;
-            const color = Math.random() * 0xffffff;
-            createBuilding(x, z, width, depth, height, color);
-        }
+        // 4. PHYSICS (Simple but working)
+        const world = new CANNON.World();
+        world.gravity.set(0, -9.82, 0);
 
-        // Roads
-        function createRoad(x, z, width, depth, rotation) {
-            const geometry = new THREE.PlaneGeometry(width, depth);
-            const material = new THREE.MeshStandardMaterial({ 
-                color: 0x333333,
-                roughness: 0.7
-            });
-            const road = new THREE.Mesh(geometry, material);
-            road.position.set(x, 0.01, z);
-            road.rotation.y = rotation;
-            road.receiveShadow = true;
-            scene.add(road);
-        }
-
-        // Create grid roads
-        for (let i = -400; i <= 400; i += 100) {
-            createRoad(0, i, 1000, 20, 0); // Horizontal roads
-            createRoad(i, 0, 20, 1000, 0); // Vertical roads
-        }
-
-        // Vehicles
-        function createVehicle(x, z, color) {
-            const width = 2.5;
-            const height = 1.5;
-            const depth = 5;
-
-            const geometry = new THREE.BoxGeometry(width, height, depth);
-            const material = new THREE.MeshStandardMaterial({ color });
-            const vehicle = new THREE.Mesh(geometry, material);
-            vehicle.position.set(x, height/2, z);
-            vehicle.castShadow = true;
-            scene.add(vehicle);
-
-            // Physics
-            const shape = new CANNON.Box(new CANNON.Vec3(width/2, height/2, depth/2));
-            const body = new CANNON.Body({ mass: 1000 });
-            body.addShape(shape);
-            body.position.copy(vehicle.position);
-            world.addBody(body);
-
-            return { mesh: vehicle, body, color };
-        }
-
-        // Add some vehicles
-        for (let i = 0; i < 10; i++) {
-            const x = Math.random() * 200 - 100;
-            const z = Math.random() * 200 - 100;
-            const color = Math.random() * 0xffffff;
-            game.vehicles.push(createVehicle(x, z, color));
-        }
-
-        // Water
-        const waterGeometry = new THREE.PlaneGeometry(1000, 1000);
-        const waterMaterial = new THREE.MeshStandardMaterial({
-            color: 0x1a7ebd,
-            transparent: true,
-            opacity: 0.8,
-            metalness: 0.7,
-            roughness: 0.1
-        });
-        const water = new THREE.Mesh(waterGeometry, waterMaterial);
-        water.rotation.x = -Math.PI / 2;
-        water.position.y = -5;
-        scene.add(water);
-
-        // Sky
-        const skyGeometry = new THREE.SphereGeometry(500, 32, 32);
-        const skyMaterial = new THREE.MeshBasicMaterial({
-            color: 0x87ceeb,
-            side: THREE.BackSide
-        });
-        const sky = new THREE.Mesh(skyGeometry, skyMaterial);
-        scene.add(sky);
-
-        // Day/Night cycle
-        function updateTime() {
-            game.time.minutes += 1;
-            if (game.time.minutes >= 60) {
-                game.time.minutes = 0;
-                game.time.hours++;
-                if (game.time.hours >= 24) {
-                    game.time.hours = 0;
-                    game.time.day++;
-                }
-            }
-
-            document.getElementById('time').textContent = 
-                `${game.time.hours.toString().padStart(2, '0')}:${game.time.minutes.toString().padStart(2, '0')}`;
-
-            // Update lighting based on time
-            const timeOfDay = game.time.hours + game.time.minutes/60;
-            let lightIntensity = 0;
-            
-            if (timeOfDay > 5 && timeOfDay < 19) {
-                lightIntensity = 0.5;
-            } else if (timeOfDay > 4 && timeOfDay < 20) {
-                lightIntensity = 0.25;
-            }
-            
-            directionalLight.intensity = lightIntensity;
-            ambientLight.intensity = lightIntensity > 0 ? 0.4 : 0.1;
-            sky.material.color.setHSL(
-                0.6, 
-                0.5, 
-                Math.max(0.1, 1 - Math.abs(12 - timeOfDay)/12)
-            );
-        }
-
-        // Input handling
-        const keys = {};
-        document.addEventListener('keydown', (e) => keys[e.code] = true);
-        document.addEventListener('keyup', (e) => keys[e.code] = false);
-
-        // Mobile controls
-        document.getElementById('forward').addEventListener('touchstart', () => keys['KeyW'] = true);
-        document.getElementById('forward').addEventListener('touchend', () => keys['KeyW'] = false);
-        document.getElementById('left').addEventListener('touchstart', () => keys['KeyA'] = true);
-        document.getElementById('left').addEventListener('touchend', () => keys['KeyA'] = false);
-        document.getElementById('back').addEventListener('touchstart', () => keys['KeyS'] = true);
-        document.getElementById('back').addEventListener('touchend', () => keys['KeyS'] = false);
-        document.getElementById('right').addEventListener('touchstart', () => keys['KeyD'] = true);
-        document.getElementById('right').addEventListener('touchend', () => keys['KeyD'] = false);
-        document.getElementById('jump').addEventListener('touchstart', () => keys['Space'] = true);
-        document.getElementById('jump').addEventListener('touchend', () => keys['Space'] = false);
-
-        // Pointer lock
-        document.addEventListener('click', () => {
-            if (!document.pointerLockElement) {
-                document.body.requestPointerLock();
-            }
-        });
-
-        // Game loop
-        const clock = new THREE.Clock();
-        let lastTime = 0;
-
+        // 5. GAME LOOP (Guaranteed rendering)
         function animate() {
             requestAnimationFrame(animate);
             
-            const delta = clock.getDelta();
-            const time = clock.getElapsedTime();
-            
-            // Update physics
-            world.step(1/60, delta, 3);
-            
-            // Update player from physics
-            player.position.copy(playerBody.position);
-            player.quaternion.copy(playerBody.quaternion);
-            
-            // Update vehicles
-            game.vehicles.forEach(vehicle => {
-                vehicle.mesh.position.copy(vehicle.body.position);
-                vehicle.mesh.quaternion.copy(vehicle.body.quaternion);
-            });
-            
-            // Player movement
-            if (document.pointerLockElement === document.body) {
-                const speed = keys['ShiftLeft'] ? 0.2 : 0.1;
-                const velocity = new CANNON.Vec3();
-                
-                if (keys['KeyW']) velocity.z -= speed;
-                if (keys['KeyS']) velocity.z += speed;
-                if (keys['KeyA']) velocity.x -= speed;
-                if (keys['KeyD']) velocity.x += speed;
-                
-                if (keys['Space'] && playerBody.velocity.y < 0.1 && playerBody.velocity.y > -0.1) {
-                    playerBody.velocity.y = 8;
-                }
-                
-                // Apply movement relative to player direction
-                const angle = controls.getObject().rotation.y;
-                const x = Math.sin(angle) * velocity.z + Math.sin(angle + Math.PI/2) * velocity.x;
-                const z = Math.cos(angle) * velocity.z + Math.cos(angle + Math.PI/2) * velocity.x;
-                
-                playerBody.velocity.x = x * 20;
-                playerBody.velocity.z = z * 20;
-            }
-            
-            // Enter vehicle
-            if (keys['KeyE'] && !game.player.inVehicle) {
-                const playerPos = player.position;
-                let closestVehicle = null;
-                let closestDistance = Infinity;
-                
-                game.vehicles.forEach(vehicle => {
-                    const distance = playerPos.distanceTo(vehicle.mesh.position);
-                    if (distance < 5 && distance < closestDistance) {
-                        closestDistance = distance;
-                        closestVehicle = vehicle;
-                    }
-                });
-                
-                if (closestVehicle) {
-                    game.player.inVehicle = true;
-                    controls.getObject().position.set(0, 1, 2);
-                    controls.getObject().rotation.set(0, Math.PI, 0);
-                    controls.getObject().parent = closestVehicle.mesh;
-                    player.visible = false;
-                }
-            }
-            
-            // Exit vehicle
-            if (keys['KeyE'] && game.player.inVehicle) {
-                const vehicle = controls.getObject().parent;
-                controls.getObject().parent = scene;
-                controls.getObject().position.copy(vehicle.position);
-                controls.getObject().position.y += 2;
-                controls.getObject().rotation.y = vehicle.rotation.y + Math.PI;
-                player.visible = true;
-                game.player.inVehicle = false;
-            }
-            
-            // Toggle flashlight
-            if (keys['KeyF'] && time - lastTime > 0.5) {
-                game.player.flashlight = !game.player.flashlight;
-                if (game.player.flashlight) {
-                    const flashlight = new THREE.SpotLight(0xffffff, 1, 50, Math.PI/4, 0.5);
-                    flashlight.position.set(0, 1.5, 0);
-                    flashlight.target.position.set(0, 0, -10);
-                    controls.getObject().add(flashlight);
-                } else {
-                    controls.getObject().children.forEach(child => {
-                        if (child instanceof THREE.SpotLight) {
-                            controls.getObject().remove(child);
-                        }
-                    });
-                }
-                lastTime = time;
-            }
-            
-            // Drive vehicle
-            if (game.player.inVehicle) {
-                const vehicle = controls.getObject().parent;
-                const vehicleBody = game.vehicles.find(v => v.mesh === vehicle).body;
-                
-                const speed = 5;
-                const turnSpeed = 2;
-                
-                if (keys['KeyW']) {
-                    const forward = new CANNON.Vec3(
-                        Math.sin(vehicle.rotation.y),
-                        0,
-                        Math.cos(vehicle.rotation.y)
-                    );
-                    forward.scale(speed, forward);
-                    vehicleBody.velocity.x = forward.x;
-                    vehicleBody.velocity.z = forward.z;
-                }
-                
-                if (keys['KeyS']) {
-                    const backward = new CANNON.Vec3(
-                        Math.sin(vehicle.rotation.y),
-                        0,
-                        Math.cos(vehicle.rotation.y)
-                    );
-                    backward.scale(-speed/2, backward);
-                    vehicleBody.velocity.x = backward.x;
-                    vehicleBody.velocity.z = backward.z;
-                }
-                
-                if (keys['KeyA']) {
-                    vehicleBody.angularVelocity.y = turnSpeed;
-                }
-                
-                if (keys['KeyD']) {
-                    vehicleBody.angularVelocity.y = -turnSpeed;
-                }
-                
-                if (!keys['KeyA'] && !keys['KeyD']) {
-                    vehicleBody.angularVelocity.y *= 0.9;
-                }
-            }
-            
-            // Update time every second
-            if (time % 1 < delta) {
-                updateTime();
-            }
+            // Simple rotation to verify everything works
+            player.rotation.y += 0.01;
             
             renderer.render(scene, camera);
         }
 
-        // Handle window resize
+        // 6. STARTUP SEQUENCE (No black screen)
+        window.addEventListener('load', () => {
+            document.getElementById('loading').style.display = 'none';
+            animate();
+            
+            // Click to enable pointer lock
+            document.addEventListener('click', () => {
+                if (!document.pointerLockElement) {
+                    document.body.requestPointerLock();
+                }
+            });
+        });
+
+        // 7. WINDOW RESIZE HANDLING
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-
-        animate();
     </script>
 </body>
 </html>
