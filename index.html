@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stelaron - Dieselpunk Adventure</title>
+    <title>Stelaron - Dieselpunk World</title>
     <style>
         /* DIESELPUNK STYLES */
-        body, html { 
-            margin: 0; 
-            padding: 0; 
-            overflow: hidden; 
+        body {
+            margin: 0;
+            overflow: hidden;
             font-family: 'Courier New', monospace;
             background: #1a120b;
             color: #e6d5b8;
         }
-        
+
+        /* WELCOME SCREEN */
         #welcome-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #1a120b url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231a120b"/><path d="M20,20 L80,20 L80,80 L20,80 Z" stroke="%23e6d5b8" stroke-width="2" fill="none"/></svg>');
+            background: #1a120b;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -29,15 +29,16 @@
             z-index: 1000;
             transition: opacity 1s;
         }
-        
+
         #title-container {
             background: rgba(26, 18, 11, 0.9);
             border: 3px solid #e6d5b8;
             padding: 2rem;
             text-align: center;
             max-width: 80%;
+            box-shadow: 0 0 20px rgba(230, 213, 184, 0.3);
         }
-        
+
         #game-title {
             font-size: 4rem;
             margin: 0;
@@ -46,28 +47,29 @@
             color: #e6d5b8;
             text-shadow: 3px 3px 0 #3e2723;
         }
-        
+
         #loading-container {
-            margin-top: 2rem;
-            width: 300px;
+            margin: 2rem 0;
+            width: 80%;
+            max-width: 400px;
         }
-        
+
         #loading-bar {
             height: 6px;
             background: #3e2723;
             border-radius: 3px;
             overflow: hidden;
         }
-        
+
         #loading-progress {
             height: 100%;
             width: 0%;
             background: #e6d5b8;
             transition: width 0.3s;
         }
-        
+
         #start-button {
-            margin-top: 2rem;
+            margin-top: 1.5rem;
             padding: 12px 30px;
             background: transparent;
             border: 2px solid #e6d5b8;
@@ -76,8 +78,26 @@
             font-size: 1.2rem;
             cursor: pointer;
             display: none;
+            transition: all 0.3s;
         }
-        
+
+        #start-button:hover {
+            background: rgba(230, 213, 184, 0.2);
+        }
+
+        /* GAME UI */
+        #game-ui {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(26, 18, 11, 0.9);
+            padding: 15px;
+            border: 2px solid #e6d5b8;
+            border-radius: 5px;
+            display: none;
+        }
+
+        /* GAME CONTAINER */
         #game-container {
             position: fixed;
             top: 0;
@@ -86,38 +106,28 @@
             height: 100%;
             display: none;
         }
-        
-        #ui {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: rgba(26, 18, 11, 0.9);
-            padding: 15px;
-            border: 2px solid #e6d5b8;
-            border-radius: 5px;
-            display: none;
-        }
     </style>
 </head>
 <body>
     <!-- WELCOME SCREEN -->
     <div id="welcome-screen">
         <div id="title-container">
-            <h1 id="game-title">Stelaron</h1>
+            <h1 id="game-title">STELARON</h1>
             <div id="loading-container">
+                <div id="loading-text">INITIALIZING STEAM SYSTEMS</div>
                 <div id="loading-bar">
                     <div id="loading-progress"></div>
                 </div>
             </div>
-            <button id="start-button">FIRE UP ENGINES</button>
+            <button id="start-button">IGNITE ENGINES</button>
         </div>
     </div>
 
     <!-- GAME UI -->
-    <div id="ui">
+    <div id="game-ui">
         <div>STEAM PRESSURE: <span id="steam">85%</span></div>
         <div>COAL RESERVE: <span id="coal">72%</span></div>
-        <div>MECHANICAL INTEGRITY: <span id="integrity">100%</span></div>
+        <div>MECH INTEGRITY: <span id="integrity">100%</span></div>
     </div>
 
     <!-- GAME CONTAINER -->
@@ -128,6 +138,14 @@
     <script>
         // 1. LOADING SEQUENCE
         let loadProgress = 0;
+        const loadingPhrases = [
+            "CALIBRATING PRESSURE GAUGES",
+            "STOKING BOILERS",
+            "PRESSURIZING STEAM LINES",
+            "ENGAGING COG ASSEMBLY",
+            "SYSTEMS NOMINAL"
+        ];
+
         const loadingInterval = setInterval(() => {
             loadProgress += 10 + Math.random() * 10;
             if (loadProgress >= 100) {
@@ -136,6 +154,8 @@
                 document.getElementById('start-button').style.display = 'block';
             }
             document.getElementById('loading-progress').style.width = loadProgress + '%';
+            document.getElementById('loading-text').textContent = 
+                loadingPhrases[Math.min(loadingPhrases.length-1, Math.floor(loadProgress/20))];
         }, 300);
 
         // 2. START GAME
@@ -143,7 +163,7 @@
             document.getElementById('welcome-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('welcome-screen').style.display = 'none';
-                document.getElementById('ui').style.display = 'block';
+                document.getElementById('game-ui').style.display = 'block';
                 initGame();
             }, 1000);
         });
@@ -159,97 +179,155 @@
             
             // CAMERA
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 5, 10);
+            camera.position.set(0, 10, 20);
             
             // RENDERER
             const renderer = new THREE.WebGLRenderer({ antialias: true });
+            if (!renderer.capabilities.isWebGL2) {
+                alert('WebGL2 not supported, please use a browser with WebGL2 support.');
+                return;
+            }
             renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
             container.appendChild(renderer.domElement);
             
             // LIGHTS
             const directionalLight = new THREE.DirectionalLight(0xffecd2, 0.8);
             directionalLight.position.set(5, 10, 7);
+            directionalLight.castShadow = true;
             scene.add(directionalLight);
             
             const ambientLight = new THREE.AmbientLight(0x404040);
             scene.add(ambientLight);
             
-            // DIESELPUNK GROUND
+            // GROUND
             const groundGeometry = new THREE.PlaneGeometry(100, 100);
             const groundMaterial = new THREE.MeshStandardMaterial({ 
                 color: 0x3e2723,
-                roughness: 0.9
+                roughness: 0.9,
+                metalness: 0.1
             });
             const ground = new THREE.Mesh(groundGeometry, groundMaterial);
             ground.rotation.x = -Math.PI/2;
+            ground.receiveShadow = true;
             scene.add(ground);
             
-            // FACTORY BUILDING
-            const buildingGeometry = new THREE.BoxGeometry(15, 20, 10);
-            const buildingMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x5d4037,
-                roughness: 0.8,
-                metalness: 0.3
-            });
-            const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
-            building.position.set(0, 10, -20);
-            scene.add(building);
-            
-            // STEAM PIPES
-            const pipeGeometry = new THREE.CylinderGeometry(0.5, 0.5, 15, 8);
-            const pipeMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x8d6e63,
-                roughness: 0.7,
-                metalness: 0.5
-            });
-            
-            for (let i = 0; i < 5; i++) {
-                const pipe = new THREE.Mesh(pipeGeometry, pipeMaterial);
-                pipe.position.set(-8 + i * 4, 7.5, -25);
-                pipe.rotation.z = Math.PI/2;
-                scene.add(pipe);
+            // INDUSTRIAL BUILDINGS
+            function createFactory(x, z) {
+                const building = new THREE.Group();
+                
+                // Main structure
+                const base = new THREE.Mesh(
+                    new THREE.BoxGeometry(15, 20, 10),
+                    new THREE.MeshStandardMaterial({ color: 0x5d4037 })
+                );
+                base.position.y = 10;
+                building.add(base);
+                
+                // Chimney
+                const chimney = new THREE.Mesh(
+                    new THREE.CylinderGeometry(1, 1, 15),
+                    new THREE.MeshStandardMaterial({ color: 0x4e342e })
+                );
+                chimney.position.set(0, 17.5, 0);
+                building.add(chimney);
+                
+                // Pipes
+                const pipeGeometry = new THREE.CylinderGeometry(0.5, 0.5, 10);
+                const pipeMaterial = new THREE.MeshStandardMaterial({ color: 0x8d6e63 });
+                
+                for (let i = 0; i < 3; i++) {
+                    const pipe = new THREE.Mesh(pipeGeometry, pipeMaterial);
+                    pipe.position.set(-4 + i * 4, 5, -5);
+                    pipe.rotation.z = Math.PI/2;
+                    building.add(pipe);
+                }
+                
+                building.position.set(x, 0, z);
+                return building;
             }
             
-            // STEAM EFFECT
-            const steamParticles = new THREE.BufferGeometry();
-            const steamPositions = new Float32Array(100 * 3);
+            // Create industrial district
+            scene.add(createFactory(0, -30));
+            scene.add(createFactory(25, -40));
+            scene.add(createFactory(-25, -40));
             
-            for (let i = 0; i < 100; i++) {
-                steamPositions[i * 3] = Math.random() * 10 - 5;
-                steamPositions[i * 3 + 1] = Math.random() * 5 + 15;
-                steamPositions[i * 3 + 2] = -25 + Math.random() * 2;
+            // STEAM TANKS
+            function createSteamTank(x, z) {
+                const tank = new THREE.Group();
+                
+                // Base
+                const base = new THREE.Mesh(
+                    new THREE.CylinderGeometry(3, 3, 2),
+                    new THREE.MeshStandardMaterial({ color: 0x6d4c41 })
+                );
+                tank.add(base);
+                
+                // Tank body
+                const body = new THREE.Mesh(
+                    new THREE.CylinderGeometry(2.5, 2.5, 6),
+                    new THREE.MeshStandardMaterial({ color: 0x8d6e63 })
+                );
+                body.position.y = 4;
+                tank.add(body);
+                
+                // Valves
+                const valveGeo = new THREE.SphereGeometry(0.5);
+                const valveMat = new THREE.MeshStandardMaterial({ color: 0xd7ccc8 });
+                
+                const valve1 = new THREE.Mesh(valveGeo, valveMat);
+                valve1.position.set(1.5, 7, 0);
+                tank.add(valve1);
+                
+                tank.position.set(x, 1, z);
+                return tank;
             }
             
-            steamParticles.setAttribute('position', new THREE.BufferAttribute(steamPositions, 3));
-            const steamMaterial = new THREE.PointsMaterial({
-                color: 0xeeeeee,
-                size: 0.5,
-                transparent: true,
-                opacity: 0.7
-            });
-            const steam = new THREE.Points(steamParticles, steamMaterial);
-            scene.add(steam);
+            scene.add(createSteamTank(15, 0));
+            scene.add(createSteamTank(-15, 0));
             
-            // PLAYER (MECHANICAL SUIT)
+            // PLAYER (MECH SUIT)
             const playerGeometry = new THREE.BoxGeometry(1, 2, 1);
             const playerMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0x8d6e63,
+                color: 0x6d4c41,
                 roughness: 0.7,
                 metalness: 0.5
             });
             const player = new THREE.Mesh(playerGeometry, playerMaterial);
             player.position.y = 1;
+            player.castShadow = true;
             scene.add(player);
+            
+            // CONTROLS
+            const controls = new THREE.PointerLockControls(player, document.body);
+            camera.position.y = 1.6;
+            scene.add(controls.getObject());
+            
+            // Movement
+            const keys = {};
+            document.addEventListener('keydown', (e) => keys[e.code] = true);
+            document.addEventListener('keyup', (e) => keys[e.code] = false);
             
             // ANIMATION LOOP
             function animate() {
                 requestAnimationFrame(animate);
                 
-                // Rotate steam for effect
-                steam.rotation.y += 0.01;
+                // Movement
+                const speed = 0.1;
+                if (keys['KeyW']) player.position.z -= speed;
+                if (keys['KeyS']) player.position.z += speed;
+                if (keys['KeyA']) player.position.x -= speed;
+                if (keys['KeyD']) player.position.x += speed;
                 
                 renderer.render(scene, camera);
             }
+            
+            // Start game when clicked
+            document.addEventListener('click', () => {
+                if (!document.pointerLockElement) {
+                    document.body.requestPointerLock();
+                }
+            });
             
             animate();
             
