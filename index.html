@@ -3,596 +3,484 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Explorer RPG</title>
+    <title>OpenWorld 3D - GTA5 Style</title>
     <style>
-        :root {
-            --space-dark: #0f0f1a;
-            --space-blue: #1a1a3a;
-            --star-yellow: #ffeb3b;
-            --health-red: #f44336;
-            --shield-blue: #2196f3;
-            --energy-green: #4caf50;
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            font-family: Arial, sans-serif;
         }
-        body {
-            font-family: 'Courier New', monospace;
-            background-color: var(--space-dark);
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
             color: white;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-        #game-container {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            height: 100vh;
-        }
-        #sidebar {
-            background-color: var(--space-blue);
-            padding: 15px;
-            border-right: 1px solid #333;
-        }
-        #main-content {
-            padding: 20px;
-            position: relative;
-        }
-        #stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        .star {
-            position: absolute;
-            background-color: white;
-            border-radius: 50%;
-        }
-        .panel {
-            background-color: rgba(0, 0, 0, 0.7);
-            border: 1px solid #444;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
             border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 15px;
+            z-index: 100;
         }
-        .status-bar {
-            height: 20px;
-            background-color: #333;
-            border-radius: 3px;
-            margin: 5px 0;
-            overflow: hidden;
-        }
-        .status-fill {
-            height: 100%;
-            transition: width 0.3s;
-        }
-        #health-bar .status-fill { background-color: var(--health-red); }
-        #shield-bar .status-fill { background-color: var(--shield-blue); }
-        #energy-bar .status-fill { background-color: var(--energy-green); }
-        button {
-            background-color: #333;
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
             color: white;
-            border: 1px solid #555;
-            padding: 8px 12px;
-            margin: 5px 0;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        button:hover {
-            background-color: #444;
-        }
-        #planet-view {
-            text-align: center;
-            margin: 20px 0;
-        }
-        #planet-img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #3a1c71, #d76d77, #ffaf7b);
-            margin: 0 auto;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-        }
-        #combat-log {
-            height: 150px;
-            overflow-y: auto;
-            background-color: black;
+            background: rgba(0,0,0,0.7);
             padding: 10px;
-            border: 1px solid #333;
-            font-family: monospace;
+            z-index: 100;
         }
-        .inventory-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px dashed #333;
+        #mobile-controls {
+            display: none;
+            position: absolute;
+            bottom: 100px;
+            width: 100%;
+            justify-content: space-around;
         }
-        .skill-node {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background-color: #333;
+        .mobile-btn {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.3);
             border-radius: 50%;
-            text-align: center;
-            line-height: 40px;
-            margin: 5px;
-            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            user-select: none;
         }
-        .skill-node.unlocked {
-            background-color: var(--energy-green);
-        }
-        .skill-node.available {
-            border: 2px solid var(--star-yellow);
+        @media (max-width: 768px) {
+            #mobile-controls { display: flex; }
+            #controls { display: none; }
         }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <div id="sidebar">
-            <div class="panel">
-                <h2>Player Stats</h2>
-                <div>Level: <span id="player-level">1</span></div>
-                <div>XP: <span id="player-xp">0</span>/<span id="player-next-xp">100</span></div>
-                <div>Credits: <span id="player-credits">500</span></div>
-                
-                <h3>Status</h3>
-                <div>Health: <span id="health-text">100</span>/100</div>
-                <div class="status-bar" id="health-bar"><div class="status-fill" style="width: 100%"></div></div>
-                
-                <div>Shields: <span id="shield-text">50</span>/50</div>
-                <div class="status-bar" id="shield-bar"><div class="status-fill" style="width: 100%"></div></div>
-                
-                <div>Energy: <span id="energy-text">100</span>/100</div>
-                <div class="status-bar" id="energy-bar"><div class="status-fill" style="width: 100%"></div></div>
-            </div>
-            
-            <div class="panel">
-                <h2>Inventory</h2>
-                <div id="inventory">
-                    <div class="inventory-item">
-                        <span>Laser Pistol</span>
-                        <span>1</span>
-                    </div>
-                </div>
-                <div>Capacity: <span id="inventory-capacity">1</span>/10</div>
-            </div>
-            
-            <div class="panel">
-                <h2>Quests</h2>
-                <div id="quests">
-                    <div class="quest">
-                        <strong>Find the Ancient Artifact</strong>
-                        <div>0/3 Planets Explored</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="main-content">
-            <div id="stars"></div>
-            
-            <div id="planet-view">
-                <h1 id="planet-name">Unknown Planet</h1>
-                <div id="planet-img"></div>
-                <p id="planet-desc">A mysterious world awaits exploration...</p>
-            </div>
-            
-            <div class="panel">
-                <h2>Actions</h2>
-                <div id="action-buttons">
-                    <button id="explore-btn">Explore Planet</button>
-                    <button id="travel-btn">Travel to New Planet</button>
-                    <button id="repair-btn" disabled>Repair Ship</button>
-                    <button id="combat-btn" disabled>Fight Enemies</button>
-                </div>
-            </div>
-            
-            <div class="panel">
-                <h2>Event Log</h2>
-                <div id="combat-log"></div>
-            </div>
-            
-            <div class="panel" id="skill-tree" style="display: none;">
-                <h2>Skill Tree</h2>
-                <div style="text-align: center;">
-                    <div class="skill-node available" data-skill="combat">⚔️</div>
-                    <div class="skill-node" data-skill="shields">🛡️</div>
-                    <div class="skill-node" data-skill="exploration">🔍</div>
-                </div>
-            </div>
-        </div>
+    <div id="ui">
+        <div>Health: <span id="health">100</span>%</div>
+        <div>Money: $<span id="money">5000</span></div>
+        <div>Time: <span id="time">12:00</span></div>
     </div>
+
+    <div id="mobile-controls">
+        <div class="mobile-btn" id="forward">↑</div>
+        <div class="mobile-btn" id="left">←</div>
+        <div class="mobile-btn" id="back">↓</div>
+        <div class="mobile-btn" id="right">→</div>
+        <div class="mobile-btn" id="jump">↥</div>
+    </div>
+
+    <div id="controls">
+        <b>Controls:</b> WASD = Move | SPACE = Jump | SHIFT = Run | MOUSE = Look | E = Enter Car | F = Toggle Flashlight
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cannon-es@0.18.0/dist/cannon-es.min.js"></script>
 
     <script>
         // Game State
-        const gameState = {
+        const game = {
             player: {
-                level: 1,
-                xp: 0,
-                nextXp: 100,
-                credits: 500,
                 health: 100,
-                maxHealth: 100,
-                shield: 50,
-                maxShield: 50,
-                energy: 100,
-                maxEnergy: 100,
-                inventory: [
-                    { name: "Laser Pistol", quantity: 1 }
-                ],
-                inventoryCapacity: 10,
-                skills: []
+                money: 5000,
+                inVehicle: false,
+                flashlight: false
             },
-            currentPlanet: null,
-            planetsVisited: 0,
-            quests: {
-                artifactQuest: {
-                    name: "Find the Ancient Artifact",
-                    description: "Explore 3 planets to uncover clues",
-                    required: 3,
-                    completed: 0,
-                    done: false
+            time: {
+                hours: 12,
+                minutes: 0,
+                day: 1
+            },
+            physicsWorld: null,
+            vehicles: [],
+            npcs: []
+        };
+
+        // Setup Three.js
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        // Physics
+        const world = new CANNON.World();
+        world.gravity.set(0, -9.82, 0);
+        world.broadphase = new CANNON.NaiveBroadphase();
+        world.solver.iterations = 10;
+        game.physicsWorld = world;
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(0, 50, 0);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        scene.add(directionalLight);
+
+        // Player
+        const playerGeometry = new THREE.BoxGeometry(1, 1.8, 1);
+        const playerMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const player = new THREE.Mesh(playerGeometry, playerMaterial);
+        player.castShadow = true;
+        player.position.y = 10;
+        scene.add(player);
+
+        // Player physics
+        const playerShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.9, 0.5));
+        const playerBody = new CANNON.Body({ mass: 5 });
+        playerBody.addShape(playerShape);
+        playerBody.position.copy(player.position);
+        world.addBody(playerBody);
+
+        // Controls
+        const controls = new THREE.PointerLockControls(player, document.body);
+        camera.position.y = 1.6;
+        scene.add(controls.getObject());
+
+        // Ground
+        const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
+        const groundMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x3a5f0b,
+            roughness: 0.8,
+            metalness: 0.2
+        });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        // Ground physics
+        const groundShape = new CANNON.Plane();
+        const groundBody = new CANNON.Body({ mass: 0 });
+        groundBody.addShape(groundShape);
+        groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+        world.addBody(groundBody);
+
+        // Buildings
+        function createBuilding(x, z, width, depth, height, color) {
+            const geometry = new THREE.BoxGeometry(width, height, depth);
+            const material = new THREE.MeshStandardMaterial({ color });
+            const building = new THREE.Mesh(geometry, material);
+            building.position.set(x, height/2, z);
+            building.castShadow = true;
+            building.receiveShadow = true;
+            scene.add(building);
+
+            // Physics
+            const shape = new CANNON.Box(new CANNON.Vec3(width/2, height/2, depth/2));
+            const body = new CANNON.Body({ mass: 0 });
+            body.addShape(shape);
+            body.position.copy(building.position);
+            world.addBody(body);
+        }
+
+        // Create city
+        for (let i = 0; i < 20; i++) {
+            const x = Math.random() * 800 - 400;
+            const z = Math.random() * 800 - 400;
+            const width = Math.random() * 30 + 10;
+            const depth = Math.random() * 30 + 10;
+            const height = Math.random() * 50 + 20;
+            const color = Math.random() * 0xffffff;
+            createBuilding(x, z, width, depth, height, color);
+        }
+
+        // Roads
+        function createRoad(x, z, width, depth, rotation) {
+            const geometry = new THREE.PlaneGeometry(width, depth);
+            const material = new THREE.MeshStandardMaterial({ 
+                color: 0x333333,
+                roughness: 0.7
+            });
+            const road = new THREE.Mesh(geometry, material);
+            road.position.set(x, 0.01, z);
+            road.rotation.y = rotation;
+            road.receiveShadow = true;
+            scene.add(road);
+        }
+
+        // Create grid roads
+        for (let i = -400; i <= 400; i += 100) {
+            createRoad(0, i, 1000, 20, 0); // Horizontal roads
+            createRoad(i, 0, 20, 1000, 0); // Vertical roads
+        }
+
+        // Vehicles
+        function createVehicle(x, z, color) {
+            const width = 2.5;
+            const height = 1.5;
+            const depth = 5;
+
+            const geometry = new THREE.BoxGeometry(width, height, depth);
+            const material = new THREE.MeshStandardMaterial({ color });
+            const vehicle = new THREE.Mesh(geometry, material);
+            vehicle.position.set(x, height/2, z);
+            vehicle.castShadow = true;
+            scene.add(vehicle);
+
+            // Physics
+            const shape = new CANNON.Box(new CANNON.Vec3(width/2, height/2, depth/2));
+            const body = new CANNON.Body({ mass: 1000 });
+            body.addShape(shape);
+            body.position.copy(vehicle.position);
+            world.addBody(body);
+
+            return { mesh: vehicle, body, color };
+        }
+
+        // Add some vehicles
+        for (let i = 0; i < 10; i++) {
+            const x = Math.random() * 200 - 100;
+            const z = Math.random() * 200 - 100;
+            const color = Math.random() * 0xffffff;
+            game.vehicles.push(createVehicle(x, z, color));
+        }
+
+        // Water
+        const waterGeometry = new THREE.PlaneGeometry(1000, 1000);
+        const waterMaterial = new THREE.MeshStandardMaterial({
+            color: 0x1a7ebd,
+            transparent: true,
+            opacity: 0.8,
+            metalness: 0.7,
+            roughness: 0.1
+        });
+        const water = new THREE.Mesh(waterGeometry, waterMaterial);
+        water.rotation.x = -Math.PI / 2;
+        water.position.y = -5;
+        scene.add(water);
+
+        // Sky
+        const skyGeometry = new THREE.SphereGeometry(500, 32, 32);
+        const skyMaterial = new THREE.MeshBasicMaterial({
+            color: 0x87ceeb,
+            side: THREE.BackSide
+        });
+        const sky = new THREE.Mesh(skyGeometry, skyMaterial);
+        scene.add(sky);
+
+        // Day/Night cycle
+        function updateTime() {
+            game.time.minutes += 1;
+            if (game.time.minutes >= 60) {
+                game.time.minutes = 0;
+                game.time.hours++;
+                if (game.time.hours >= 24) {
+                    game.time.hours = 0;
+                    game.time.day++;
                 }
-            },
-            enemies: [
-                { name: "Space Pirate", health: 30, damage: 5, xp: 20, credits: 50 },
-                { name: "Alien Predator", health: 50, damage: 8, xp: 30, credits: 75 },
-                { name: "Rogue Drone", health: 20, damage: 3, xp: 15, credits: 30 }
-            ],
-            inCombat: false,
-            currentEnemy: null
-        };
+            }
 
-        // DOM Elements
-        const elements = {
-            playerLevel: document.getElementById('player-level'),
-            playerXp: document.getElementById('player-xp'),
-            playerNextXp: document.getElementById('player-next-xp'),
-            playerCredits: document.getElementById('player-credits'),
-            healthText: document.getElementById('health-text'),
-            healthBar: document.getElementById('health-bar').querySelector('.status-fill'),
-            shieldText: document.getElementById('shield-text'),
-            shieldBar: document.getElementById('shield-bar').querySelector('.status-fill'),
-            energyText: document.getElementById('energy-text'),
-            energyBar: document.getElementById('energy-bar').querySelector('.status-fill'),
-            inventoryList: document.getElementById('inventory'),
-            inventoryCapacity: document.getElementById('inventory-capacity'),
-            planetName: document.getElementById('planet-name'),
-            planetImg: document.getElementById('planet-img'),
-            planetDesc: document.getElementById('planet-desc'),
-            exploreBtn: document.getElementById('explore-btn'),
-            travelBtn: document.getElementById('travel-btn'),
-            repairBtn: document.getElementById('repair-btn'),
-            combatBtn: document.getElementById('combat-btn'),
-            combatLog: document.getElementById('combat-log'),
-            skillTree: document.getElementById('skill-tree')
-        };
+            document.getElementById('time').textContent = 
+                `${game.time.hours.toString().padStart(2, '0')}:${game.time.minutes.toString().padStart(2, '0')}`;
 
-        // Initialize game
-        function initGame() {
-            createStars();
-            generatePlanet();
-            updateUI();
-            loadGame();
+            // Update lighting based on time
+            const timeOfDay = game.time.hours + game.time.minutes/60;
+            let lightIntensity = 0;
             
-            // Event listeners
-            elements.exploreBtn.addEventListener('click', explorePlanet);
-            elements.travelBtn.addEventListener('click', travelToNewPlanet);
-            elements.repairBtn.addEventListener('click', repairShip);
-            elements.combatBtn.addEventListener('click', startCombat);
+            if (timeOfDay > 5 && timeOfDay < 19) {
+                lightIntensity = 0.5;
+            } else if (timeOfDay > 4 && timeOfDay < 20) {
+                lightIntensity = 0.25;
+            }
             
-            document.querySelectorAll('.skill-node').forEach(node => {
-                node.addEventListener('click', unlockSkill);
+            directionalLight.intensity = lightIntensity;
+            ambientLight.intensity = lightIntensity > 0 ? 0.4 : 0.1;
+            sky.material.color.setHSL(
+                0.6, 
+                0.5, 
+                Math.max(0.1, 1 - Math.abs(12 - timeOfDay)/12)
+            );
+        }
+
+        // Input handling
+        const keys = {};
+        document.addEventListener('keydown', (e) => keys[e.code] = true);
+        document.addEventListener('keyup', (e) => keys[e.code] = false);
+
+        // Mobile controls
+        document.getElementById('forward').addEventListener('touchstart', () => keys['KeyW'] = true);
+        document.getElementById('forward').addEventListener('touchend', () => keys['KeyW'] = false);
+        document.getElementById('left').addEventListener('touchstart', () => keys['KeyA'] = true);
+        document.getElementById('left').addEventListener('touchend', () => keys['KeyA'] = false);
+        document.getElementById('back').addEventListener('touchstart', () => keys['KeyS'] = true);
+        document.getElementById('back').addEventListener('touchend', () => keys['KeyS'] = false);
+        document.getElementById('right').addEventListener('touchstart', () => keys['KeyD'] = true);
+        document.getElementById('right').addEventListener('touchend', () => keys['KeyD'] = false);
+        document.getElementById('jump').addEventListener('touchstart', () => keys['Space'] = true);
+        document.getElementById('jump').addEventListener('touchend', () => keys['Space'] = false);
+
+        // Pointer lock
+        document.addEventListener('click', () => {
+            if (!document.pointerLockElement) {
+                document.body.requestPointerLock();
+            }
+        });
+
+        // Game loop
+        const clock = new THREE.Clock();
+        let lastTime = 0;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+            
+            // Update physics
+            world.step(1/60, delta, 3);
+            
+            // Update player from physics
+            player.position.copy(playerBody.position);
+            player.quaternion.copy(playerBody.quaternion);
+            
+            // Update vehicles
+            game.vehicles.forEach(vehicle => {
+                vehicle.mesh.position.copy(vehicle.body.position);
+                vehicle.mesh.quaternion.copy(vehicle.body.quaternion);
             });
             
-            // Autosave every 30 seconds
-            setInterval(saveGame, 30000);
-        }
-
-        // Starfield background
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            starsContainer.innerHTML = '';
-            
-            for (let i = 0; i < 200; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = `${Math.random() * 3}px`;
-                star.style.height = star.style.width;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.opacity = Math.random();
-                starsContainer.appendChild(star);
-            }
-        }
-
-        // Planet generation
-        function generatePlanet() {
-            const planetTypes = [
-                { name: "Lava World", color: "linear-gradient(45deg, #ff4500, #ff8c00, #ff4500)", desc: "A scorching planet with rivers of molten rock." },
-                { name: "Ice Planet", color: "linear-gradient(45deg, #00bfff, #87cefa, #e0ffff)", desc: "Frozen wasteland with glittering ice formations." },
-                { name: "Jungle World", color: "linear-gradient(45deg, #228b22, #32cd32, #228b22)", desc: "Teeming with alien flora and fauna." },
-                { name: "Desert Planet", color: "linear-gradient(45deg, #f4a460, #d2b48c, #f4a460)", desc: "Vast dunes stretch as far as the eye can see." },
-                { name: "Ocean World", color: "linear-gradient(45deg, #1e90ff, #00bfff, #1e90ff)", desc: "A planet with no land, only endless oceans." }
-            ];
-            
-            const planet = planetTypes[Math.floor(Math.random() * planetTypes.length)];
-            gameState.currentPlanet = planet;
-            
-            elements.planetName.textContent = planet.name;
-            elements.planetImg.style.background = planet.color;
-            elements.planetDesc.textContent = planet.desc;
-            
-            // Enable/disable actions based on planet state
-            elements.combatBtn.disabled = !(Math.random() > 0.3); // 70% chance of enemies
-        }
-
-        // Exploration function
-        function explorePlanet() {
-            if (gameState.inCombat) {
-                logMessage("You can't explore while in combat!");
-                return;
-            }
-            
-            if (gameState.player.energy < 10) {
-                logMessage("Not enough energy to explore!");
-                return;
-            }
-            
-            gameState.player.energy -= 10;
-            
-            const outcomes = [
-                { text: "You found a cache of resources!", effect: () => { gameState.player.credits += 50; } },
-                { text: "Discovered ancient ruins. Gained knowledge!", effect: () => { addXp(20); } },
-                { text: "Found a damaged ship component. Repairs needed.", effect: () => { elements.repairBtn.disabled = false; } },
-                { text: "Encountered hostile alien life!", effect: () => { startCombat(); } },
-                { text: "Exploration yielded nothing of value.", effect: () => {} }
-            ];
-            
-            const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
-            logMessage(outcome.text);
-            outcome.effect();
-            
-            // Quest progress
-            if (!gameState.quests.artifactQuest.done) {
-                gameState.quests.artifactQuest.completed++;
-                if (gameState.quests.artifactQuest.completed >= gameState.quests.artifactQuest.required) {
-                    gameState.quests.artifactQuest.done = true;
-                    logMessage("QUEST COMPLETE: You found the Ancient Artifact!");
-                    addXp(100);
-                    gameState.player.credits += 500;
+            // Player movement
+            if (document.pointerLockElement === document.body) {
+                const speed = keys['ShiftLeft'] ? 0.2 : 0.1;
+                const velocity = new CANNON.Vec3();
+                
+                if (keys['KeyW']) velocity.z -= speed;
+                if (keys['KeyS']) velocity.z += speed;
+                if (keys['KeyA']) velocity.x -= speed;
+                if (keys['KeyD']) velocity.x += speed;
+                
+                if (keys['Space'] && playerBody.velocity.y < 0.1 && playerBody.velocity.y > -0.1) {
+                    playerBody.velocity.y = 8;
                 }
+                
+                // Apply movement relative to player direction
+                const angle = controls.getObject().rotation.y;
+                const x = Math.sin(angle) * velocity.z + Math.sin(angle + Math.PI/2) * velocity.x;
+                const z = Math.cos(angle) * velocity.z + Math.cos(angle + Math.PI/2) * velocity.x;
+                
+                playerBody.velocity.x = x * 20;
+                playerBody.velocity.z = z * 20;
             }
             
-            updateUI();
-        }
-
-        // Combat system
-        function startCombat() {
-            if (gameState.inCombat) return;
-            
-            gameState.inCombat = true;
-            gameState.currentEnemy = {...gameState.enemies[Math.floor(Math.random() * gameState.enemies.length)]};
-            
-            logMessage(`Combat started! A ${gameState.currentEnemy.name} approaches!`);
-            elements.exploreBtn.disabled = true;
-            elements.travelBtn.disabled = true;
-            elements.combatBtn.textContent = "Attack";
-            elements.combatBtn.onclick = playerAttack;
-            
-            updateUI();
-        }
-
-        function playerAttack() {
-            if (!gameState.inCombat) return;
-            
-            // Player attack
-            const playerDamage = Math.floor(Math.random() * 15) + 5;
-            gameState.currentEnemy.health -= playerDamage;
-            logMessage(`You attack the ${gameState.currentEnemy.name} for ${playerDamage} damage!`);
-            
-            // Check if enemy is defeated
-            if (gameState.currentEnemy.health <= 0) {
-                endCombat(true);
-                return;
-            }
-            
-            // Enemy attack
-            const enemyDamage = Math.floor(Math.random() * gameState.currentEnemy.damage) + 1;
-            
-            // Shield absorption
-            let remainingDamage = enemyDamage;
-            if (gameState.player.shield > 0) {
-                const shieldDamage = Math.min(remainingDamage, gameState.player.shield);
-                gameState.player.shield -= shieldDamage;
-                remainingDamage -= shieldDamage;
-                logMessage(`Your shields absorb ${shieldDamage} damage!`);
-            }
-            
-            if (remainingDamage > 0) {
-                gameState.player.health -= remainingDamage;
-                logMessage(`The ${gameState.currentEnemy.name} hits you for ${remainingDamage} damage!`);
-            }
-            
-            // Check if player is defeated
-            if (gameState.player.health <= 0) {
-                gameState.player.health = 1; // Don't let player die
-                logMessage("You barely escape with your life!");
-                endCombat(false);
-            }
-            
-            updateUI();
-        }
-
-        function endCombat(victory) {
-            gameState.inCombat = false;
-            elements.exploreBtn.disabled = false;
-            elements.travelBtn.disabled = false;
-            elements.combatBtn.textContent = "Fight Enemies";
-            elements.combatBtn.onclick = startCombat;
-            
-            if (victory) {
-                logMessage(`You defeated the ${gameState.currentEnemy.name}!`);
-                addXp(gameState.currentEnemy.xp);
-                gameState.player.credits += gameState.currentEnemy.credits;
-            }
-            
-            gameState.currentEnemy = null;
-            updateUI();
-        }
-
-        // Travel function
-        function travelToNewPlanet() {
-            if (gameState.inCombat) {
-                logMessage("You can't travel while in combat!");
-                return;
-            }
-            
-            if (gameState.player.energy < 20) {
-                logMessage("Not enough energy for interstellar travel!");
-                return;
-            }
-            
-            gameState.player.energy -= 20;
-            generatePlanet();
-            logMessage("Traveling to a new planet...");
-            updateUI();
-        }
-
-        // Repair function
-        function repairShip() {
-            const cost = 100;
-            if (gameState.player.credits >= cost) {
-                gameState.player.credits -= cost;
-                gameState.player.health = gameState.player.maxHealth;
-                gameState.player.shield = gameState.player.maxShield;
-                elements.repairBtn.disabled = true;
-                logMessage("Ship fully repaired!");
-            } else {
-                logMessage(`Not enough credits (need ${cost})!`);
-            }
-            updateUI();
-        }
-
-        // Skill system
-        function unlockSkill(e) {
-            const skill = e.target.dataset.skill;
-            
-            if (e.target.classList.contains('unlocked')) return;
-            if (!e.target.classList.contains('available')) return;
-            
-            const cost = 1; // Skill points would normally be used
-            
-            e.target.classList.add('unlocked');
-            e.target.classList.remove('available');
-            gameState.player.skills.push(skill);
-            
-            // Apply skill effects
-            switch(skill) {
-                case 'combat':
-                    logMessage("Skill unlocked: Combat Training (+5 damage)");
-                    break;
-                case 'shields':
-                    gameState.player.maxShield += 20;
-                    gameState.player.shield = gameState.player.maxShield;
-                    logMessage("Skill unlocked: Shield Upgrade (+20 max shields)");
-                    break;
-                case 'exploration':
-                    gameState.player.maxEnergy += 30;
-                    gameState.player.energy = gameState.player.maxEnergy;
-                    logMessage("Skill unlocked: Efficient Exploration (+30 energy)");
-                    break;
-            }
-            
-            updateUI();
-        }
-
-        // XP and leveling
-        function addXp(amount) {
-            gameState.player.xp += amount;
-            if (gameState.player.xp >= gameState.player.nextXp) {
-                levelUp();
-            }
-            updateUI();
-        }
-
-        function levelUp() {
-            gameState.player.level++;
-            gameState.player.xp -= gameState.player.nextXp;
-            gameState.player.nextXp = Math.floor(gameState.player.nextXp * 1.5);
-            
-            gameState.player.maxHealth += 10;
-            gameState.player.health = gameState.player.maxHealth;
-            
-            logMessage(`LEVEL UP! You are now level ${gameState.player.level}!`);
-            
-            // Show skill tree every 3 levels
-            if (gameState.player.level % 3 === 0) {
-                elements.skillTree.style.display = 'block';
-                document.querySelectorAll('.skill-node').forEach(node => {
-                    if (!node.classList.contains('unlocked')) {
-                        node.classList.add('available');
+            // Enter vehicle
+            if (keys['KeyE'] && !game.player.inVehicle) {
+                const playerPos = player.position;
+                let closestVehicle = null;
+                let closestDistance = Infinity;
+                
+                game.vehicles.forEach(vehicle => {
+                    const distance = playerPos.distanceTo(vehicle.mesh.position);
+                    if (distance < 5 && distance < closestDistance) {
+                        closestDistance = distance;
+                        closestVehicle = vehicle;
                     }
                 });
+                
+                if (closestVehicle) {
+                    game.player.inVehicle = true;
+                    controls.getObject().position.set(0, 1, 2);
+                    controls.getObject().rotation.set(0, Math.PI, 0);
+                    controls.getObject().parent = closestVehicle.mesh;
+                    player.visible = false;
+                }
             }
-        }
-
-        // UI updates
-        function updateUI() {
-            // Player stats
-            elements.playerLevel.textContent = gameState.player.level;
-            elements.playerXp.textContent = gameState.player.xp;
-            elements.playerNextXp.textContent = gameState.player.nextXp;
-            elements.playerCredits.textContent = gameState.player.credits;
             
-            // Status bars
-            elements.healthText.textContent = `${gameState.player.health}/${gameState.player.maxHealth}`;
-            elements.healthBar.style.width = `${(gameState.player.health / gameState.player.maxHealth) * 100}%`;
-            
-            elements.shieldText.textContent = `${gameState.player.shield}/${gameState.player.maxShield}`;
-            elements.shieldBar.style.width = `${(gameState.player.shield / gameState.player.maxShield) * 100}%`;
-            
-            elements.energyText.textContent = `${gameState.player.energy}/${gameState.player.maxEnergy}`;
-            elements.energyBar.style.width = `${(gameState.player.energy / gameState.player.maxEnergy) * 100}%`;
-            
-            // Inventory
-            elements.inventoryList.innerHTML = '';
-            gameState.player.inventory.forEach(item => {
-                const itemEl = document.createElement('div');
-                itemEl.className = 'inventory-item';
-                itemEl.innerHTML = `<span>${item.name}</span><span>${item.quantity}</span>`;
-                elements.inventoryList.appendChild(itemEl);
-            });
-            elements.inventoryCapacity.textContent = `${gameState.player.inventory.length}/${gameState.player.inventoryCapacity}`;
-        }
-
-        // Log messages
-        function logMessage(message) {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            const messageEl = document.createElement('div');
-            messageEl.textContent = `[${timeString}] ${message}`;
-            elements.combatLog.appendChild(messageEl);
-            elements.combatLog.scrollTop = elements.combatLog.scrollHeight;
-        }
-
-        // Save/load system
-        function saveGame() {
-            localStorage.setItem('spaceExplorerSave', JSON.stringify(gameState));
-            logMessage("Game saved!");
-        }
-
-        function loadGame() {
-            const save = localStorage.getItem('spaceExplorerSave');
-            if (save) {
-                Object.assign(gameState, JSON.parse(save));
-                logMessage("Game loaded!");
-                updateUI();
+            // Exit vehicle
+            if (keys['KeyE'] && game.player.inVehicle) {
+                const vehicle = controls.getObject().parent;
+                controls.getObject().parent = scene;
+                controls.getObject().position.copy(vehicle.position);
+                controls.getObject().position.y += 2;
+                controls.getObject().rotation.y = vehicle.rotation.y + Math.PI;
+                player.visible = true;
+                game.player.inVehicle = false;
             }
+            
+            // Toggle flashlight
+            if (keys['KeyF'] && time - lastTime > 0.5) {
+                game.player.flashlight = !game.player.flashlight;
+                if (game.player.flashlight) {
+                    const flashlight = new THREE.SpotLight(0xffffff, 1, 50, Math.PI/4, 0.5);
+                    flashlight.position.set(0, 1.5, 0);
+                    flashlight.target.position.set(0, 0, -10);
+                    controls.getObject().add(flashlight);
+                } else {
+                    controls.getObject().children.forEach(child => {
+                        if (child instanceof THREE.SpotLight) {
+                            controls.getObject().remove(child);
+                        }
+                    });
+                }
+                lastTime = time;
+            }
+            
+            // Drive vehicle
+            if (game.player.inVehicle) {
+                const vehicle = controls.getObject().parent;
+                const vehicleBody = game.vehicles.find(v => v.mesh === vehicle).body;
+                
+                const speed = 5;
+                const turnSpeed = 2;
+                
+                if (keys['KeyW']) {
+                    const forward = new CANNON.Vec3(
+                        Math.sin(vehicle.rotation.y),
+                        0,
+                        Math.cos(vehicle.rotation.y)
+                    );
+                    forward.scale(speed, forward);
+                    vehicleBody.velocity.x = forward.x;
+                    vehicleBody.velocity.z = forward.z;
+                }
+                
+                if (keys['KeyS']) {
+                    const backward = new CANNON.Vec3(
+                        Math.sin(vehicle.rotation.y),
+                        0,
+                        Math.cos(vehicle.rotation.y)
+                    );
+                    backward.scale(-speed/2, backward);
+                    vehicleBody.velocity.x = backward.x;
+                    vehicleBody.velocity.z = backward.z;
+                }
+                
+                if (keys['KeyA']) {
+                    vehicleBody.angularVelocity.y = turnSpeed;
+                }
+                
+                if (keys['KeyD']) {
+                    vehicleBody.angularVelocity.y = -turnSpeed;
+                }
+                
+                if (!keys['KeyA'] && !keys['KeyD']) {
+                    vehicleBody.angularVelocity.y *= 0.9;
+                }
+            }
+            
+            // Update time every second
+            if (time % 1 < delta) {
+                updateTime();
+            }
+            
+            renderer.render(scene, camera);
         }
 
-        // Start the game
-        window.onload = initGame;
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
     </script>
 </body>
 </html>
