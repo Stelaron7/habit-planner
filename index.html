@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stelaron - Transform Your Life</title>
+    <title>QuantumFlow | AI-Powered Habit Architect</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== BASE STYLES ===== */
+        /* ===== GLOBAL STYLES ===== */
+        :root {
+            --quantum-blue: #00f0ff;
+            --neuro-purple: #8a2be2;
+            --dark-space: #0a0a1a;
+            --light-void: #1e1e2e;
+            --success-green: #00ff9d;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,17 +23,18 @@
         }
 
         body {
+            background: var(--dark-space);
             color: white;
             line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* ===== HERO SECTION ===== */
+        /* ===== HERO SECTION (4K BG) ===== */
         .hero {
             height: 100vh;
             background: 
-                linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)),
-                url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3840&q=80') center/cover;
+                linear-gradient(rgba(10, 10, 26, 0.7), rgba(10, 10, 26, 0.9)),
+                url('https://images.unsplash.com/photo-1677442135136-760c813a743d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3840&q=80') center/cover;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -37,7 +46,10 @@
         .hero h1 {
             font-size: 4rem;
             margin-bottom: 1.5rem;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: linear-gradient(90deg, var(--quantum-blue), var(--neuro-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
             animation: fadeIn 1.5s ease;
         }
 
@@ -45,11 +57,12 @@
             font-size: 1.5rem;
             max-width: 800px;
             margin-bottom: 3rem;
+            opacity: 0.9;
             animation: fadeIn 2s ease;
         }
 
         .cta-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--quantum-blue), var(--neuro-purple));
             color: white;
             border: none;
             padding: 1rem 2.5rem;
@@ -62,62 +75,115 @@
 
         .cta-button:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 10px 25px rgba(0, 240, 255, 0.5);
         }
 
-        /* ===== SECTIONS ===== */
-        .section {
+        /* ===== NEUROSYNC DASHBOARD ===== */
+        .dashboard {
             padding: 6rem 10%;
-            color: #333;
+            background: var(--light-void);
         }
 
-        .section-dark {
-            background: #1a1a2e;
-            color: white;
-        }
-
-        .section-header {
+        .dashboard-header {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 3rem;
         }
 
-        .section-header h2 {
+        .dashboard-header h2 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--quantum-blue), var(--neuro-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
-        /* ===== HABIT CARDS ===== */
-        .habit-grid {
+        .habit-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
 
         .habit-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: transform 0.3s;
         }
 
         .habit-card:hover {
             transform: translateY(-10px);
+            border: 1px solid var(--quantum-blue);
         }
 
-        .card-image {
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .card-content {
-            padding: 1.5rem;
-        }
-
-        .card-content h3 {
-            color: #2A2F4F;
+        .habit-card h3 {
+            font-size: 1.5rem;
             margin-bottom: 1rem;
+            color: var(--quantum-blue);
+        }
+
+        .habit-card p {
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--quantum-blue), var(--success-green));
+            border-radius: 4px;
+            width: 65%; /* Dynamic in real app */
+        }
+
+        .adjust-button {
+            background: transparent;
+            color: var(--quantum-blue);
+            border: 1px solid var(--quantum-blue);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .adjust-button:hover {
+            background: var(--quantum-blue);
+            color: var(--dark-space);
+        }
+
+        /* ===== AI RECOMMENDATIONS ===== */
+        .ai-recommendations {
+            padding: 6rem 10%;
+            background: var(--dark-space);
+            text-align: center;
+        }
+
+        .ai-card {
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid var(--quantum-blue);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .ai-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--quantum-blue);
+        }
+
+        .ai-card p {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
         }
 
         /* ===== ANIMATIONS ===== */
@@ -137,150 +203,138 @@
             .hero h1 {
                 font-size: 2.5rem;
             }
-            
             .hero p {
                 font-size: 1.2rem;
+            }
+            .dashboard, .ai-recommendations {
+                padding: 4rem 5%;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
+    <!-- ===== HERO SECTION ===== -->
     <section class="hero">
-        <h1>Engineer Your Perfect Life</h1>
-        <p>Stelaron's AI-powered habit architecture transforms your daily routines into quantum leaps toward success</p>
-        <button class="cta-button">Begin Transformation</button>
+        <h1>QuantumFlow Habit Architect</h1>
+        <p>Your habits <strong>auto-adjust</strong> based on biometrics, energy levels, and AI optimization.</p>
+        <button class="cta-button">Start Free Trial</button>
     </section>
 
-    <!-- Health Section -->
-    <section class="section">
-        <div class="section-header">
-            <h2>Biohacking Mastery</h2>
-            <p>Optimize your biology for peak performance</p>
+    <!-- ===== NEUROSYNC DASHBOARD ===== -->
+    <section class="dashboard">
+        <div class="dashboard-header">
+            <h2>Your NeuroSync Dashboard</h2>
+            <p>AI-powered habits that adapt to your daily performance</p>
         </div>
-        <div class="habit-grid">
+        <div class="habit-cards">
+            <!-- Card 1: Morning Routine -->
             <div class="habit-card">
-                <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80')"></div>
-                <div class="card-content">
-                    <h3>Circadian Rhythm</h3>
-                    <p>Align your biology with natural cycles</p>
-                    <button class="btn-premium">Unlock Protocol</button>
+                <h3>Morning Quantum Routine</h3>
+                <p>Adjusted based on sleep quality & energy</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 78%"></div>
                 </div>
+                <p><strong>Today's AI Adjustment:</strong> +15min meditation (low sleep score)</p>
+                <button class="adjust-button">Optimize Further</button>
             </div>
-            <!-- Add 3 more cards -->
-        </div>
-    </section>
 
-    <!-- Education Section -->
-    <section class="section section-dark">
-        <div class="section-header">
-            <h2>Neuro Acceleration</h2>
-            <p>Upgrade your cognitive performance</p>
-        </div>
-        <div class="habit-grid">
+            <!-- Card 2: Work Focus -->
             <div class="habit-card">
-                <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80')"></div>
-                <div class="card-content">
-                    <h3>Memory Palace</h3>
-                    <p>Ancient technique, modern implementation</p>
-                    <button class="btn-premium">Unlock Protocol</button>
+                <h3>Deep Work Blocks</h3>
+                <p>Dynamically scheduled based on focus levels</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%"></div>
                 </div>
+                <p><strong>Today's AI Adjustment:</strong> Shorter sessions (high stress)</p>
+                <button class="adjust-button">Optimize Further</button>
             </div>
-            <!-- Add 3 more cards -->
-        </div>
-    </section>
 
-    <!-- Productivity Section -->
-    <section class="section">
-        <div class="section-header">
-            <h2>Flow State Engineering</h2>
-            <p>Enter peak performance on demand</p>
-        </div>
-        <div class="habit-grid">
+            <!-- Card 3: Fitness -->
             <div class="habit-card">
-                <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80')"></div>
-                <div class="card-content">
-                    <h3>Deep Work</h3>
-                    <p>4-hour productivity in 2 hours</p>
-                    <button class="btn-premium">Unlock Protocol</button>
+                <h3>Biometric Training</h3>
+                <p>Workouts adapt to recovery & HRV</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 92%"></div>
                 </div>
+                <p><strong>Today's AI Adjustment:</strong> Yoga instead of HIIT (high fatigue)</p>
+                <button class="adjust-button">Optimize Further</button>
             </div>
-            <!-- Add 3 more cards -->
         </div>
     </section>
 
-    <!-- Relationships Section -->
-    <section class="section section-dark">
-        <div class="section-header">
-            <h2>Social Architecture</h2>
-            <p>Design your ideal social ecosystem</p>
-        </div>
-        <div class="habit-grid">
-            <div class="habit-card">
-                <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1738&q=80')"></div>
-                <div class="card-content">
-                    <h3>Charisma Patterns</h3>
-                    <p>Become magnetically attractive</p>
-                    <button class="btn-premium">Unlock Protocol</button>
-                </div>
-            </div>
-            <!-- Add 3 more cards -->
-        </div>
-    </section>
-
-    <!-- Finance Section -->
-    <section class="section">
-        <div class="section-header">
-            <h2>Wealth Algorithms</h2>
-            <p>Program your financial freedom</p>
-        </div>
-        <div class="habit-grid">
-            <div class="habit-card">
-                <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1511&q=80')"></div>
-                <div class="card-content">
-                    <h3>Automated Wealth</h3>
-                    <p>Set-and-forget income systems</p>
-                    <button class="btn-premium">Unlock Protocol</button>
-                </div>
-            </div>
-            <!-- Add 3 more cards -->
+    <!-- ===== AI RECOMMENDATIONS ===== -->
+    <section class="ai-recommendations">
+        <div class="ai-card">
+            <h3><i class="fas fa-robot"></i> AI Recommendation</h3>
+            <p>"Based on your <strong>72% sleep efficiency</strong> and <strong>elevated stress markers</strong>, we recommend:"</p>
+            <ul style="text-align: left; margin: 1rem 0 2rem; padding-left: 2rem;">
+                <li>20min breathwork instead of morning run</li>
+                <li>90min focused work blocks (instead of 120min)</li>
+                <li>Electrolyte boost at 3PM</li>
+            </ul>
+            <button class="cta-button">Apply AI Suggestions</button>
         </div>
     </section>
 
     <script>
-        // Animate sections on scroll
-        const sections = document.querySelectorAll('.section');
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = 1;
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, { threshold: 0.1 });
-
-        sections.forEach(section => {
-            section.style.opacity = 0;
-            section.style.transform = 'translateY(50px)';
-            section.style.transition = 'all 0.8s ease';
-            observer.observe(section);
-        });
-
-        // Button functionality
-        document.querySelectorAll('.btn-premium').forEach(btn => {
-            btn.addEventListener('click', () => {
-                alert("🚀 Premium feature unlocked!\n\nThis would redirect to payment in production");
+        // ===== FUNCTIONALITY =====
+        // 1. Dynamic Habit Adjustments
+        const adjustButtons = document.querySelectorAll('.adjust-button');
+        adjustButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const card = button.closest('.habit-card');
+                const progress = card.querySelector('.progress-fill');
+                const newWidth = Math.min(100, parseInt(progress.style.width) + 10);
+                progress.style.width = `${newWidth}%`;
+                
+                // Simulate AI adjustment
+                const adjustments = [
+                    "Added 5min cooldown",
+                    "Reduced intensity by 20%",
+                    "Scheduled for peak energy time",
+                    "Added recovery protocol"
+                ];
+                const randomAdjustment = adjustments[Math.floor(Math.random() * adjustments.length)];
+                card.querySelector('p:last-of-type').innerHTML = `<strong>AI Update:</strong> ${randomAdjustment}`;
             });
         });
 
-        // CTA button
-        document.querySelector('.cta-button').addEventListener('click', () => {
+        // 2. Apply AI Recommendations
+        document.querySelector('.ai-recommendations .cta-button').addEventListener('click', () => {
+            alert("🚀 AI recommendations applied! Your habits have been optimized.");
+        });
+
+        // 3. Start Free Trial
+        document.querySelector('.hero .cta-button').addEventListener('click', () => {
             window.scrollTo({
-                top: document.querySelector('.section').offsetTop,
+                top: document.querySelector('.dashboard').offsetTop - 100,
                 behavior: 'smooth'
             });
         });
+
+        // 4. Animate on scroll
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.dashboard, .ai-recommendations');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }
+            });
+        };
+
+        // Initialize
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.dashboard, .ai-recommendations').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.8s ease';
+            });
+            animateOnScroll();
+        });
+
+        window.addEventListener('scroll', animateOnScroll);
     </script>
 </body>
 </html>
