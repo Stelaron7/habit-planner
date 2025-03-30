@@ -2,231 +2,169 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stelaron - Dieselpunk World</title>
+    <!-- Critical Viewport Tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stelaron - Optimized Dieselpunk</title>
     <style>
-        /* DIESELPUNK STYLES */
+        /* OPTIMIZED STYLES */
         body {
             margin: 0;
             overflow: hidden;
             font-family: 'Courier New', monospace;
             background: #1a120b;
             color: #e6d5b8;
+            touch-action: none;
         }
-
-        /* WELCOME SCREEN */
-        #welcome-screen {
+        #welcome-screen, #world-container, #game-ui {
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background: #1a120b;
+            top: 0;
+            left: 0;
+        }
+        #welcome-screen {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            background: #1a120b;
             z-index: 1000;
-            transition: opacity 1s;
+            transition: opacity 0.5s;
         }
-
-        #title-container {
-            background: rgba(26, 18, 11, 0.9);
-            border: 3px solid #e6d5b8;
-            padding: 2rem;
-            text-align: center;
-            max-width: 80%;
-            box-shadow: 0 0 20px rgba(230, 213, 184, 0.3);
+        #loading-bar {
+            width: 80%;
+            max-width: 300px;
+            height: 4px;
+            background: #3e2723;
+            margin: 20px 0;
         }
-
-        #game-title {
-            font-size: 4rem;
-            margin: 0;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            color: #e6d5b8;
-            text-shadow: 3px 3px 0 #3e2723;
-        }
-
-        #start-button {
-            margin-top: 2rem;
-            padding: 12px 30px;
-            background: transparent;
-            border: 2px solid #e6d5b8;
-            color: #e6d5b8;
-            font-family: inherit;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        #start-button:hover {
-            background: rgba(230, 213, 184, 0.2);
-        }
-
-        /* 3D WORLD CONTAINER */
-        #world-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+        #loading-progress {
             height: 100%;
-            perspective: 1000px;
-            display: none;
-            overflow: hidden;
+            width: 0%;
+            background: #e6d5b8;
+            transition: width 0.3s;
         }
-
-        /* 3D ELEMENTS */
+        #world-container {
+            display: none;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
         .building {
             position: absolute;
             background: #5d4037;
             border: 2px solid #8d6e63;
             transform-style: preserve-3d;
         }
-
-        #player {
-            position: absolute;
-            width: 50px;
-            height: 80px;
-            background: #6d4c41;
-            border: 2px solid #e6d5b8;
-            transform-style: preserve-3d;
-            z-index: 100;
-        }
-
-        /* UI */
-        #game-ui {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(26, 18, 11, 0.9);
-            padding: 15px;
-            border: 2px solid #e6d5b8;
-            border-radius: 5px;
-            display: none;
-            z-index: 500;
-        }
     </style>
 </head>
 <body>
-    <!-- WELCOME SCREEN -->
+    <!-- Welcome Screen -->
     <div id="welcome-screen">
-        <div id="title-container">
-            <h1 id="game-title">STELARON</h1>
-            <button id="start-button">IGNITE ENGINES</button>
-        </div>
+        <h1>STELARON</h1>
+        <div id="loading-bar"><div id="loading-progress"></div></div>
+        <button id="start-btn" disabled>LOADING SYSTEMS...</button>
     </div>
 
-    <!-- 3D WORLD -->
+    <!-- 3D World Container -->
     <div id="world-container"></div>
 
-    <!-- GAME UI -->
-    <div id="game-ui">
-        <div>STEAM PRESSURE: 85%</div>
-        <div>COAL RESERVE: 72%</div>
-    </div>
-
-    <!-- THREE.JS CSS3D RENDERER -->
+    <!-- Three.js from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/renderers/CSS3DRenderer.js"></script>
+
     <script>
-        // 1. INITIALIZE 3D WORLD
-        let scene, camera, renderer;
-        const worldContainer = document.getElementById('world-container');
-        const buildings = [];
+        // 1. LOADING MANAGER
+        const assets = {
+            buildings: 20,
+            loaded: 0
+        };
 
-        function initWorld() {
-            // SCENE
-            scene = new THREE.Scene();
-
-            // CAMERA
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth/innerHeight, 0.1, 1000);
-            camera.position.set(0, 100, 200);
-
-            // RENDERER (CSS3D - NO WEBGL NEEDED)
-            renderer = new THREE.CSS3DRenderer();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            worldContainer.appendChild(renderer.domElement);
-
-            // CREATE DIESELPUNK CITY
-            createBuildings();
-            createPlayer();
-
-            // START RENDERING
-            animate();
-        }
-
-        // 2. CREATE BUILDINGS
-        function createBuildings() {
-            const buildingCount = 20;
-            const spacing = 100;
-            const sizeVariation = 50;
-
-            for (let i = 0; i < buildingCount; i++) {
-                const width = 40 + Math.random() * sizeVariation;
-                const depth = 40 + Math.random() * sizeVariation;
-                const height = 60 + Math.random() * sizeVariation * 2;
-                const x = (i % 5 - 2) * spacing;
-                const z = Math.floor(i / 5 - 2) * spacing;
-
-                const building = document.createElement('div');
-                building.className = 'building';
-                building.style.width = width + 'px';
-                building.style.height = height + 'px';
-                building.style.transform = `translate3d(${x}px, ${-height/2}px, ${z}px)`;
-
-                // Add pipes and details
-                building.innerHTML = `
-                    <div style="position:absolute; top:10px; left:10px; width:20px; height:${height-20}px; background:#8d6e63;"></div>
-                    <div style="position:absolute; top:${height-30}px; left:30px; width:${width-60}px; height:20px; background:#6d4c41;"></div>
-                `;
-
-                const cssObject = new THREE.CSS3DObject(building);
-                cssObject.position.set(x, 0, z);
-                scene.add(cssObject);
-                buildings.push(cssObject);
+        function updateProgress() {
+            const percent = Math.min(100, (assets.loaded/assets.buildings)*100);
+            document.getElementById('loading-progress').style.width = percent + '%';
+            
+            if (percent >= 100) {
+                document.getElementById('start-btn').disabled = false;
+                document.getElementById('start-btn').textContent = 'IGNITE ENGINES';
             }
         }
 
-        // 3. CREATE PLAYER
-        function createPlayer() {
-            const playerElement = document.createElement('div');
-            playerElement.id = 'player';
+        // 2. SCENE INITIALIZATION (Optimized)
+        function initWorld() {
+            const container = document.getElementById('world-container');
             
-            const player = new THREE.CSS3DObject(playerElement);
-            player.position.set(0, 0, 0);
-            scene.add(player);
-        }
-
-        // 4. ANIMATION LOOP
-        function animate() {
-            requestAnimationFrame(animate);
+            // Scene
+            const scene = new THREE.Scene();
             
-            // Rotate buildings slightly for parallax effect
-            buildings.forEach((building, i) => {
-                building.rotation.y += 0.001 * (i % 3 - 1);
+            // Camera (Adjusted for CSS3D)
+            const camera = new THREE.PerspectiveCamera(60, window.innerWidth/innerHeight, 1, 10000);
+            camera.position.set(0, 200, 300);
+            
+            // CSS3D Renderer (Critical Fix)
+            const renderer = new THREE.CSS3DRenderer();
+            renderer.domElement.style.position = 'absolute';
+            renderer.domElement.style.top = '0';
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Create Buildings (Async)
+            function createBuilding(i) {
+                return new Promise(resolve => {
+                    setTimeout(() => { // Simulate async loading
+                        const building = document.createElement('div');
+                        building.className = 'building';
+                        building.style.width = `${40 + Math.random() * 60}px`;
+                        building.style.height = `${60 + Math.random() * 120}px`;
+                        
+                        const obj = new THREE.CSS3DObject(building);
+                        obj.position.set(
+                            (i % 5 - 2) * 120,
+                            0,
+                            Math.floor(i / 5 - 2) * 120
+                        );
+                        scene.add(obj);
+                        
+                        assets.loaded++;
+                        updateProgress();
+                        resolve();
+                    }, 10);
+                });
+            }
+            
+            // Batch create buildings
+            Promise.all(
+                Array.from({length: assets.buildings}, (_,i) => createBuilding(i))
+            ).then(() => {
+                // Start rendering when ready
+                function animate() {
+                    requestAnimationFrame(animate);
+                    renderer.render(scene, camera);
+                }
+                animate();
             });
-            
-            renderer.render(scene, camera);
         }
 
-        // 5. START GAME
-        document.getElementById('start-button').addEventListener('click', () => {
+        // 3. START BUTTON HANDLER
+        document.getElementById('start-btn').addEventListener('click', () => {
             document.getElementById('welcome-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('welcome-screen').style.display = 'none';
                 document.getElementById('world-container').style.display = 'block';
-                document.getElementById('game-ui').style.display = 'block';
                 initWorld();
-            }, 1000);
+            }, 500);
         });
 
-        // 6. WINDOW RESIZE
+        // 4. WINDOW RESIZE HANDLER
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            if (renderer) {
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+            }
         });
+
+        // Initialize on load
+        updateProgress();
     </script>
 </body>
 </html>
