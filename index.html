@@ -1,256 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stelaron - Ghibli Style Photo Converter</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --accent: #3498db;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #f9f9f9;
-            color: var(--dark);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        header {
-            background: linear-gradient(135deg, var(--primary), #1a252f);
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        
-        .subtitle {
-            font-weight: 300;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            flex: 1;
-        }
-        
-        .converter-app {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            overflow: hidden;
-            margin-top: -3rem;
-            position: relative;
-            z-index: 10;
-        }
-        
-        /* [Previous CSS styles remain exactly the same until the loading overlay] */
-        
-        .legal-links {
-            text-align: center;
-            margin: 2rem 0;
-            font-size: 0.9rem;
-        }
-        
-        .legal-links a {
-            color: var(--primary);
-            margin: 0 10px;
-            text-decoration: none;
-        }
-        
-        .legal-links a:hover {
-            text-decoration: underline;
-        }
-        
-        /* [Rest of the previous CSS styles remain exactly the same] */
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stelaron Ghibli Converter</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header>
-        <div class="logo">Stelaron</div>
-        <p class="subtitle">Transform your photos into Ghibli-inspired artwork</p>
-    </header>
-    
-    <div class="container">
-        <div class="converter-app">
-            <!-- [Previous HTML structure remains exactly the same] -->
-        </div>
-        
-        <div class="legal-links">
-            <a href="#" id="termsLink">Terms of Service</a>
-            <a href="#" id="privacyLink">Privacy Policy</a>
-            <a href="#" id="disclaimerLink">Disclaimer</a>
-            <a href="#" id="copyrightLink">Copyright Info</a>
-        </div>
+  <header>
+    <h1>Stelaron Ghibli Converter</h1>
+  </header>
+  <main>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="photo" accept="image/*" required />
+      <button type="submit">Convert to Ghibli Style</button>
+    </form>
+    <div id="result">
+      <!-- Converted image will be displayed here -->
     </div>
-    
-    <!-- Loading overlay and footer from previous version remain the same -->
-    
-    <!-- Legal Modals -->
-    <div id="termsModal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <h3>Terms of Service</h3>
-            <p>By using Stelaron, you agree that:</p>
-            <ul>
-                <li>You own or have permission to use all uploaded images</li>
-                <li>Generated artworks are for personal use only</li>
-                <li>Commercial use requires additional licensing</li>
-                <li>We don't claim ownership of your images</li>
-            </ul>
-            <button class="close-modal">Close</button>
-        </div>
-    </div>
-    
-    <!-- [Similar modals for Privacy Policy, Disclaimer, Copyright Info] -->
-    
-    <script>
-        // [Previous JavaScript code remains the same until the end]
-        
-        // Enhanced Ghibli effect algorithm
-        function applyGhibliEffect() {
-            const intensity = styleIntensity.value / 100;
-            const vibrance = colorVibrance.value / 100;
-            const detail = detailPreservation.value / 100;
-            
-            // 1. Initial processing
-            resultCtx.drawImage(originalImage, 0, 0, processedCanvas.width, processedCanvas.height);
-            let imageData = resultCtx.getImageData(0, 0, processedCanvas.width, processedCanvas.height);
-            let data = imageData.data;
-            
-            // 2. Color transformation with enhanced Ghibli palette
-            for (let i = 0; i < data.length; i += 4) {
-                const r = data[i], g = data[i+1], b = data[i+2];
-                const brightness = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
-                
-                // Enhanced Ghibli color mapping
-                if (brightness > 0.85) {
-                    // Highlights - soft whites/creams
-                    data[i] = 240 + (r - 240) * (1 - intensity);
-                    data[i+1] = 235 + (g - 235) * (1 - intensity);
-                    data[i+2] = 215 + (b - 215) * (1 - intensity);
-                } else if (brightness > 0.6) {
-                    // Mid-tones - warm pastels
-                    data[i] = r * (1 - intensity*0.3) + 220 * intensity*0.3;
-                    data[i+1] = g * (1 - intensity*0.4) + 180 * intensity*0.4;
-                    data[i+2] = b * (1 - intensity*0.5) + 150 * intensity*0.5;
-                } else if (brightness > 0.3) {
-                    // Shadows - rich colors
-                    data[i] = r * (1 - intensity*0.2) + 80 * intensity*0.2;
-                    data[i+1] = g * (1 - intensity*0.1) + 100 * intensity*0.1;
-                    data[i+2] = b * (1 - intensity*0.3) + 120 * intensity*0.3;
-                } else {
-                    // Deep shadows - muted tones
-                    data[i] = r * (1 - intensity*0.4) + 40 * intensity*0.4;
-                    data[i+1] = g * (1 - intensity*0.5) + 50 * intensity*0.5;
-                    data[i+2] = b * (1 - intensity*0.6) + 70 * intensity*0.6;
-                }
-                
-                // Vibrance boost
-                const avg = (data[i] + data[i+1] + data[i+2]) / 3;
-                data[i] = avg + (data[i] - avg) * (1 + vibrance*2);
-                data[i+1] = avg + (data[i+1] - avg) * (1 + vibrance*1.8);
-                data[i+2] = avg + (data[i+2] - avg) * (1 + vibrance*1.5);
-            }
-            
-            // 3. Edge enhancement for animated look
-            const edgeData = new Uint8ClampedArray(data.length);
-            edgeData.set(data);
-            
-            for (let y = 1; y < processedCanvas.height-1; y++) {
-                for (let x = 1; x < processedCanvas.width-1; x++) {
-                    const i = (y * processedCanvas.width + x) * 4;
-                    const neighbors = [
-                        ((y-1)*processedCanvas.width + x) * 4,
-                        ((y+1)*processedCanvas.width + x) * 4,
-                        (y*processedCanvas.width + (x-1)) * 4,
-                        (y*processedCanvas.width + (x+1)) * 4
-                    ];
-                    
-                    let edge = 0;
-                    neighbors.forEach(n => {
-                        edge += Math.abs(data[i] - data[n]);
-                        edge += Math.abs(data[i+1] - data[n+1]);
-                        edge += Math.abs(data[i+2] - data[n+2]);
-                    });
-                    
-                    edge /= neighbors.length * 3;
-                    
-                    if (edge > 30 * (1 + intensity - detail)) {
-                        edgeData[i] *= 0.7;
-                        edgeData[i+1] *= 0.7;
-                        edgeData[i+2] *= 0.7;
-                    }
-                }
-            }
-            
-            // 4. Final touches
-            resultCtx.putImageData(new ImageData(edgeData, processedCanvas.width, processedCanvas.height), 0, 0);
-            
-            // Painterly texture
-            const texture = document.createElement('canvas');
-            texture.width = processedCanvas.width;
-            texture.height = processedCanvas.height;
-            const texCtx = texture.getContext('2d');
-            const texData = texCtx.createImageData(texture.width, texture.height);
-            
-            for (let i = 0; i < texData.data.length; i += 4) {
-                const noise = Math.random() * 40 * intensity;
-                texData.data[i] = noise;
-                texData.data[i+1] = noise;
-                texData.data[i+2] = noise;
-                texData.data[i+3] = 255;
-            }
-            
-            texCtx.putImageData(texData, 0, 0);
-            resultCtx.globalAlpha = 0.08 * intensity;
-            resultCtx.globalCompositeOperation = 'overlay';
-            resultCtx.drawImage(texture, 0, 0);
-            resultCtx.globalCompositeOperation = 'source-over';
-            resultCtx.globalAlpha = 1.0;
+  </main>
+  <footer>
+    <p>&copy; 2025 Stelaron. All rights reserved.</p>
+    <nav>
+      <a href="/legal/privacy.html">Privacy Policy</a>
+      <a href="/legal/terms.html">Terms of Service</a>
+      <a href="/legal/copyright.html">Copyright</a>
+    </nav>
+  </footer>
+  <script>
+    const form = document.getElementById('uploadForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '<p>Processing image...</p>';
+      try {
+        const response = await fetch('/convert', {
+          method: 'POST',
+          body: formData
+        });
+        if (!response.ok) {
+          throw new Error('Conversion failed');
         }
-        
-        // Legal modal handling
-        document.getElementById('termsLink').addEventListener('click', () => {
-            document.getElementById('termsModal').style.display = 'block';
-        });
-        
-        // [Add similar handlers for other legal links]
-        
-        document.querySelectorAll('.close-modal').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.modal').forEach(m => {
-                    m.style.display = 'none';
-                });
-            });
-        });
-    </script>
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        resultDiv.innerHTML = `<img src="${url}" alt="Converted Image">`;
+      } catch (error) {
+        resultDiv.innerHTML = '<p>Error converting image.</p>';
+        console.error(error);
+      }
+    });
+  </script>
 </body>
 </html>
