@@ -1,0 +1,15 @@
+{
+  "name": "stelaron-ghibli-converter",
+  "version": "1.0.0",
+  "description": "A minimalist Ghibli photo converter website by Stelaron.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "jimp": "^0.16.1"
+  }
+}
+
