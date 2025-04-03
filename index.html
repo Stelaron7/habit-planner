@@ -2,169 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Critical Viewport Tag -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Stelaron - Optimized Dieselpunk</title>
-    <style>
-        /* OPTIMIZED STYLES */
-        body {
-            margin: 0;
-            overflow: hidden;
-            font-family: 'Courier New', monospace;
-            background: #1a120b;
-            color: #e6d5b8;
-            touch-action: none;
-        }
-        #welcome-screen, #world-container, #game-ui {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-        }
-        #welcome-screen {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: #1a120b;
-            z-index: 1000;
-            transition: opacity 0.5s;
-        }
-        #loading-bar {
-            width: 80%;
-            max-width: 300px;
-            height: 4px;
-            background: #3e2723;
-            margin: 20px 0;
-        }
-        #loading-progress {
-            height: 100%;
-            width: 0%;
-            background: #e6d5b8;
-            transition: width 0.3s;
-        }
-        #world-container {
-            display: none;
-            perspective: 1000px;
-            transform-style: preserve-3d;
-        }
-        .building {
-            position: absolute;
-            background: #5d4037;
-            border: 2px solid #8d6e63;
-            transform-style: preserve-3d;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stelaron - Ghibli Style Photo Generator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Welcome Screen -->
-    <div id="welcome-screen">
-        <h1>STELARON</h1>
-        <div id="loading-bar"><div id="loading-progress"></div></div>
-        <button id="start-btn" disabled>LOADING SYSTEMS...</button>
+    <div class="container">
+        <h1>Create Your Ghibli-Style Art</h1>
+        <p>Upload a photo to transform it into a Studio Ghibli-inspired artwork for your t-shirt</p>
+        
+        <div class="upload-area" id="dropZone">
+            <input type="file" id="imageUpload" accept="image/*">
+            <label for="imageUpload" class="upload-btn">Choose Photo</label>
+            <p>or drag & drop here</p>
+        </div>
+        
+        <div class="controls">
+            <div class="slider-control">
+                <label for="styleIntensity">Ghibli Style Intensity</label>
+                <input type="range" id="styleIntensity" min="0" max="100" value="70">
+            </div>
+            
+            <div class="slider-control">
+                <label for="colorVibrance">Color Vibrance</label>
+                <input type="range" id="colorVibrance" min="0" max="100" value="80">
+            </div>
+            
+            <button id="applyEffect">Apply Ghibli Effect</button>
+            <button id="downloadBtn" disabled>Download Artwork</button>
+        </div>
+        
+        <div class="result-container">
+            <div class="image-preview">
+                <h3>Original Photo</h3>
+                <canvas id="originalCanvas"></canvas>
+            </div>
+            <div class="image-preview">
+                <h3>Ghibli Style Art</h3>
+                <canvas id="processedCanvas"></canvas>
+            </div>
+        </div>
+        
+        <div class="shirt-preview">
+            <h3>T-Shirt Preview</h3>
+            <div class="shirt-template">
+                <img src="shirt-template.png" alt="T-Shirt Template" id="shirtTemplate">
+                <canvas id="shirtCanvas"></canvas>
+            </div>
+            <button id="addToShirt" disabled>Add to T-Shirt Design</button>
+        </div>
     </div>
 
-    <!-- 3D World Container -->
-    <div id="world-container"></div>
-
-    <!-- Three.js from CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/renderers/CSS3DRenderer.js"></script>
-
-    <script>
-        // 1. LOADING MANAGER
-        const assets = {
-            buildings: 20,
-            loaded: 0
-        };
-
-        function updateProgress() {
-            const percent = Math.min(100, (assets.loaded/assets.buildings)*100);
-            document.getElementById('loading-progress').style.width = percent + '%';
-            
-            if (percent >= 100) {
-                document.getElementById('start-btn').disabled = false;
-                document.getElementById('start-btn').textContent = 'IGNITE ENGINES';
-            }
-        }
-
-        // 2. SCENE INITIALIZATION (Optimized)
-        function initWorld() {
-            const container = document.getElementById('world-container');
-            
-            // Scene
-            const scene = new THREE.Scene();
-            
-            // Camera (Adjusted for CSS3D)
-            const camera = new THREE.PerspectiveCamera(60, window.innerWidth/innerHeight, 1, 10000);
-            camera.position.set(0, 200, 300);
-            
-            // CSS3D Renderer (Critical Fix)
-            const renderer = new THREE.CSS3DRenderer();
-            renderer.domElement.style.position = 'absolute';
-            renderer.domElement.style.top = '0';
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-            
-            // Create Buildings (Async)
-            function createBuilding(i) {
-                return new Promise(resolve => {
-                    setTimeout(() => { // Simulate async loading
-                        const building = document.createElement('div');
-                        building.className = 'building';
-                        building.style.width = `${40 + Math.random() * 60}px`;
-                        building.style.height = `${60 + Math.random() * 120}px`;
-                        
-                        const obj = new THREE.CSS3DObject(building);
-                        obj.position.set(
-                            (i % 5 - 2) * 120,
-                            0,
-                            Math.floor(i / 5 - 2) * 120
-                        );
-                        scene.add(obj);
-                        
-                        assets.loaded++;
-                        updateProgress();
-                        resolve();
-                    }, 10);
-                });
-            }
-            
-            // Batch create buildings
-            Promise.all(
-                Array.from({length: assets.buildings}, (_,i) => createBuilding(i))
-            ).then(() => {
-                // Start rendering when ready
-                function animate() {
-                    requestAnimationFrame(animate);
-                    renderer.render(scene, camera);
-                }
-                animate();
-            });
-        }
-
-        // 3. START BUTTON HANDLER
-        document.getElementById('start-btn').addEventListener('click', () => {
-            document.getElementById('welcome-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('welcome-screen').style.display = 'none';
-                document.getElementById('world-container').style.display = 'block';
-                initWorld();
-            }, 500);
-        });
-
-        // 4. WINDOW RESIZE HANDLER
-        window.addEventListener('resize', () => {
-            if (renderer) {
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-            }
-        });
-
-        // Initialize on load
-        updateProgress();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
