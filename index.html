@@ -11,45 +11,22 @@
     <h1>Stelaron Ghibli Converter</h1>
   </header>
   <main>
-    <form id="uploadForm" enctype="multipart/form-data">
-      <input type="file" name="photo" accept="image/*" required />
-      <button type="submit">Convert to Ghibli Style</button>
+    <form id="uploadForm">
+      <input type="file" id="imageInput" accept="image/*" required />
+      <button type="submit">Convert Image</button>
     </form>
-    <div id="result">
-      <!-- Converted image will be displayed here -->
-    </div>
+    <canvas id="resultCanvas"></canvas>
+    <button id="downloadButton" style="display:none;">Download Converted Image</button>
   </main>
   <footer>
     <p>&copy; 2025 Stelaron. All rights reserved.</p>
     <nav>
-      <a href="/legal/privacy.html">Privacy Policy</a>
-      <a href="/legal/terms.html">Terms of Service</a>
-      <a href="/legal/copyright.html">Copyright</a>
+      <a href="legal/privacy.html">Privacy Policy</a>
+      <a href="legal/terms.html">Terms of Service</a>
+      <a href="legal/copyright.html">Copyright</a>
     </nav>
+    <!-- (Optional) Insert your Google AdSense snippet here for monetization -->
   </footer>
-  <script>
-    const form = document.getElementById('uploadForm');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = '<p>Processing image...</p>';
-      try {
-        const response = await fetch('/convert', {
-          method: 'POST',
-          body: formData
-        });
-        if (!response.ok) {
-          throw new Error('Conversion failed');
-        }
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        resultDiv.innerHTML = `<img src="${url}" alt="Converted Image">`;
-      } catch (error) {
-        resultDiv.innerHTML = '<p>Error converting image.</p>';
-        console.error(error);
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
